@@ -90,28 +90,8 @@ namespace Domo.Main
         /// Get a value from the config
         /// </summary>
         /// <typeparam name="T">Return type</typeparam>
-        /// <param name="key">The key to get the value from</param>
+        /// <param name="key">The keys to get the value from</param>
         /// <returns>Returns the object cast to <paramref name="T"/></returns>
-        public static T GetValue<T>(string key)
-        {
-            // Get the value from the config
-            object val = GetValue<object>(data, key);
-
-            // Make sure the casting goes right
-            try
-            {
-                return (T)Convert.ChangeType(val, typeof(T));
-            }
-            catch (InvalidCastException e)
-            {
-                Log.Error("Failed to cast " + val.GetType() + " to " + typeof(T) + " for '" + key + "'");
-                Log.Exception(e);
-            }
-
-            // If it failed, return the default of T
-            return default(T);
-        }
-
         public static T GetValue<T>(params string[] keys)
         {
             return GetValue<T>(data, 0, keys);
