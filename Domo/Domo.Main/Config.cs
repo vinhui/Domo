@@ -1,6 +1,5 @@
 ﻿using Domo.Debug;
 using Domo.Serialization;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +24,15 @@ namespace Domo.Main
         /// The default settings
         /// </summary>
         private static Dictionary<string, object> defaultData = new Dictionary<string, object>()
-        { };
+        {
+            { "minLogLevel", "-1" },
+            {
+                "test",
+                new Dictionary<string, object>() {
+                    { "test", "haai" }
+                }
+            },
+        };
 
         /// <summary>
         /// All the settings that are actually used are stored here
@@ -106,10 +113,10 @@ namespace Domo.Main
                 return GetValue<T>(dict, keys[currIndex]);
             else
             {
-                if (dict[keys[currIndex]].GetType() == typeof(JObject))
+                if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
                 {
                     return GetValue<T>(
-                        (dict[keys[currIndex]] as JObject).ToObject<Dictionary<string, object>>(),
+                        (Dictionary<string, object>)dict[keys[currIndex]],
                         ++currIndex,
                         keys);
                 }
@@ -246,15 +253,15 @@ namespace Domo.Main
             {
                 if (currIndex == keys.Length - 1)
                 {
-                    dict[keys[currIndex]] = value;              // THIS DOESNT ACTUALLY SET IT IN THE CONFIG CURRENTLY
+                    dict[keys[currIndex]] = value;
                     return true;
                 }
                 else
                 {
-                    if (dict[keys[currIndex]].GetType() == typeof(JObject))
+                    if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
                     {
                         return SetValue(
-                            (dict[keys[currIndex]] as JObject).ToObject<Dictionary<string, object>>(),
+                            dict[keys[currIndex]] as Dictionary<string, object>,
                             keys,
                             value,
                             ++currIndex);

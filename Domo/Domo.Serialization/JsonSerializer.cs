@@ -1,23 +1,25 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace Domo.Serialization
 {
     public class JsonSerializer : Serializer
     {
+        private JavaScriptSerializer serializer = new JavaScriptSerializer();
+
         public override string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return serializer.Serialize(obj);
         }
 
         public override T Deserialize<T>(string obj)
         {
-            return JsonConvert.DeserializeObject<T>(obj);
+            return serializer.Deserialize<T>(obj);
         }
 
         public override object Deserialize(Type type, string obj)
         {
-            return JsonConvert.DeserializeObject(obj, type);
+            return serializer.Deserialize(obj, type);
         }
     }
 }
