@@ -26,9 +26,24 @@ namespace Domo.Debug
 
             Logger instance = Activator.CreateInstance(type) as Logger;
             if (instance != null)
+            {
+                Log.Debug("Registering logger '" + type.FullName + "'");
                 loggers.Add(instance);
+            }
             else
                 Log.Error("Failed to create an instance of '" + type.FullName + "'!");
+        }
+
+        public static void UnregisterLogger<T>() where T : Logger
+        {
+            UnregisterLogger(typeof(T));
+        }
+
+        public static void UnregisterLogger(Type type)
+        {
+            Log.Debug("Unregistering logger '" + type.FullName + "'");
+
+            loggers.RemoveAll(x => x.GetType() == type);
         }
 
         #region Log Debug
