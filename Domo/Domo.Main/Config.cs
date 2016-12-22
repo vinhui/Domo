@@ -1,5 +1,6 @@
 ﻿using Domo.Debug;
 using Domo.Serialization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -105,16 +106,16 @@ namespace Domo.Main
                 return GetValue<T>(dict, keys[currIndex]);
             else
             {
-                if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                if (dict[keys[currIndex]].GetType() == typeof(JObject))
                 {
                     return GetValue<T>(
-                        (Dictionary<string, object>)dict[keys[currIndex]],
+                        (dict[keys[currIndex]] as JObject).ToObject<Dictionary<string, object>>(),
                         ++currIndex,
                         keys);
                 }
                 else
                 {
-                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex)) + "' is not a dictionary");
+                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary, the type is '" + dict[keys[currIndex]].GetType().FullName + "'");
                     return default(T);
                 }
             }
@@ -245,22 +246,22 @@ namespace Domo.Main
             {
                 if (currIndex == keys.Length - 1)
                 {
-                    dict[keys[currIndex]] = value;
+                    dict[keys[currIndex]] = value;              // THIS DOESNT ACTUALLY SET IT IN THE CONFIG CURRENTLY
                     return true;
                 }
                 else
                 {
-                    if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                    if (dict[keys[currIndex]].GetType() == typeof(JObject))
                     {
                         return SetValue(
-                        dict[keys[currIndex]] as Dictionary<string, object>,
-                        keys,
-                        value,
-                        ++currIndex);
+                            (dict[keys[currIndex]] as JObject).ToObject<Dictionary<string, object>>(),
+                            keys,
+                            value,
+                            ++currIndex);
                     }
                     else
                     {
-                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex)) + "' is not a dictionary");
+                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary");
                         return false;
                     }
                 }
