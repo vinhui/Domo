@@ -36,6 +36,8 @@ namespace Domo.Main
         /// </summary>
         static Config()
         {
+            Log.Debug("Initializing config");
+
             // Set the path property to the full path to the config file
             path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), fileName);
 
@@ -112,7 +114,7 @@ namespace Domo.Main
                 }
                 else
                 {
-                    Log.Error("The value of '" + keys[currIndex] + "' is not a dictionary");
+                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex)) + "' is not a dictionary");
                     return default(T);
                 }
             }
@@ -153,26 +155,120 @@ namespace Domo.Main
         }
 
         /// <summary>
-        /// Set a value
+        /// Check if the config has a certain key chain
         /// </summary>
-        /// <param name="key">The key for which the value should be set</param>
-        /// <param name="value">The thing you want to set it to</param>
-        /// <param name="write">Do you want to write the changes to the config file?</param>
-        public static void SetValue(string key, object value, bool write = true)
+        /// <param name="keys">Name to look for</param>
+        public static bool ContainsKey(params string[] keys)
         {
-            data[key] = value;
+            return ContainsKey(data, keys, 0);
+        }
 
-            if (write)
-                WriteToFile();
+        private static bool ContainsKey(Dictionary<string, object> dict, string[] keys, int currIndex)
+        {
+            if (dict != null)
+            {
+                if (dict.ContainsKey(keys[currIndex]))
+                {
+                    if (currIndex == keys.Length - 1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                        {
+                            return ContainsKey(
+                            dict[keys[currIndex]] as Dictionary<string, object>,
+                            keys,
+                            ++currIndex);
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Check if the config has a certain key
+        /// Set a value in the config
         /// </summary>
-        /// <param name="key">Name to look for</param>
-        public static bool ContainsKey(string key)
+        /// <param name="value">The value to set</param>
+        /// <param name="keys">The key chain of which to set the value of</param>
+        public static void SetValue(object value, params string[] keys)
         {
-            return data.ContainsKey(key);
+            SetValue(value, true, keys);
+        }
+
+        /// <summary>
+        /// Set a value in the config
+        /// </summary>
+        /// <param name="value">The value to set</param>
+        /// <param name="write">Should the config be written to disk after it successfully set the value</param>
+        /// <param name="keys">The key chain of which to set the value of</param>
+        /// <returns>Returns true if the value was successfully set</returns>
+        public static bool SetValue(object value, bool write, params string[] keys)
+        {
+            if (SetValue(data, keys, value, 0))
+            {
+                Log.Debug("Successfully set the value of '" + string.Join(".", keys) + "' in the config");
+
+                if (write)
+                    WriteToFile();
+
+                return true;
+            }
+
+            Log.Debug("Key chain '" + string.Join(".", keys) + "' doesn't exist in the config");
+
+            return false;
+        }
+
+        /// <summary>
+        /// Recursively go through the chain of keys and finally set the value
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="keys"></param>
+        /// <param name="value"></param>
+        /// <param name="keyIndexes"></param>
+        /// <param name="currIndex"></param>
+        /// <returns>True if the chain of keys exists, false if it failed to set</returns>
+        private static bool SetValue(Dictionary<string, object> dict, string[] keys, object value, int currIndex)
+        {
+            if (dict == null)
+            {
+                Log.Error("Failed to set a value in the config, it's possible the keys don't match up");
+                return false;
+            }
+
+
+            if (dict.ContainsKey(keys[currIndex]))
+            {
+                if (currIndex == keys.Length - 1)
+                {
+                    dict[keys[currIndex]] = value;
+                    return true;
+                }
+                else
+                {
+                    if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                    {
+                        return SetValue(
+                        dict[keys[currIndex]] as Dictionary<string, object>,
+                        keys,
+                        value,
+                        ++currIndex);
+                    }
+                    else
+                    {
+                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex)) + "' is not a dictionary");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
