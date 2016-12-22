@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.WebAPI", "Domo.WebAPI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.ConsoleApp", "Domo.ConsoleApp\Domo.ConsoleApp.csproj", "{960D8040-D38F-494D-A26C-1E37017C7E80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Debug", "Domo.Debug\Domo.Debug.csproj", "{D3116925-88A8-49C6-B813-D9D83ED729F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{960D8040-D38F-494D-A26C-1E37017C7E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{960D8040-D38F-494D-A26C-1E37017C7E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{960D8040-D38F-494D-A26C-1E37017C7E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3116925-88A8-49C6-B813-D9D83ED729F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3116925-88A8-49C6-B813-D9D83ED729F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3116925-88A8-49C6-B813-D9D83ED729F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3116925-88A8-49C6-B813-D9D83ED729F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
