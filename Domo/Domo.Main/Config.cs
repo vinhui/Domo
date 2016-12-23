@@ -107,16 +107,24 @@ namespace Domo.Main
                 return GetValue<T>(dict, keys[currIndex]);
             else
             {
-                if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                if (dict.ContainsKey(keys[currIndex]))
                 {
-                    return GetValue<T>(
-                        (Dictionary<string, object>)dict[keys[currIndex]],
-                        ++currIndex,
-                        keys);
+                    if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                    {
+                        return GetValue<T>(
+                            (Dictionary<string, object>)dict[keys[currIndex]],
+                            ++currIndex,
+                            keys);
+                    }
+                    else
+                    {
+                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary, the type is '" + dict[keys[currIndex]].GetType().FullName + "'");
+                        return default(T);
+                    }
                 }
                 else
                 {
-                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary, the type is '" + dict[keys[currIndex]].GetType().FullName + "'");
+                    Log.Error("There is no key chain '" + string.Join(".", keys) + "' in the config");
                     return default(T);
                 }
             }
@@ -207,22 +215,13 @@ namespace Domo.Main
         /// <param name="value">The value to set</param>
         /// <param name="write">Should the config be written to disk after it successfully set the value</param>
         /// <param name="keys">The key chain of which to set the value of</param>
-        /// <returns>Returns true if the value was successfully set</returns>
-        public static bool SetValue(object value, bool write, params string[] keys)
+        public static void SetValue(object value, bool write, params string[] keys)
         {
-            if (SetValue(data, keys, value, 0))
-            {
-                Log.Debug("Successfully set the value of '" + string.Join(".", keys) + "' in the config");
+            SetValue(data, keys, value, 0);
+            Log.Debug("Set the value of '" + string.Join(".", keys) + "' in the config");
 
-                if (write)
-                    WriteToFile();
-
-                return true;
-            }
-
-            Log.Debug("Key chain '" + string.Join(".", keys) + "' doesn't exist in the config");
-
-            return false;
+            if (write)
+                WriteToFile();
         }
 
         /// <summary>
@@ -233,43 +232,35 @@ namespace Domo.Main
         /// <param name="value"></param>
         /// <param name="keyIndexes"></param>
         /// <param name="currIndex"></param>
-        /// <returns>True if the chain of keys exists, false if it failed to set</returns>
-        private static bool SetValue(Dictionary<string, object> dict, string[] keys, object value, int currIndex)
+        private static void SetValue(Dictionary<string, object> dict, string[] keys, object value, int currIndex)
         {
             if (dict == null)
             {
-                Log.Error("Failed to set a value in the config, it's possible the keys don't match up");
-                return false;
+                Log.Error("Failed to set a value in the config");
+                return;
             }
 
-
-            if (dict.ContainsKey(keys[currIndex]))
+            if (currIndex == keys.Length - 1)
             {
-                if (currIndex == keys.Length - 1)
-                {
-                    dict[keys[currIndex]] = value;
-                    return true;
-                }
-                else
-                {
-                    if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
-                    {
-                        return SetValue(
-                            dict[keys[currIndex]] as Dictionary<string, object>,
-                            keys,
-                            value,
-                            ++currIndex);
-                    }
-                    else
-                    {
-                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary");
-                        return false;
-                    }
-                }
+                dict[keys[currIndex]] = value;
             }
             else
             {
-                return false;
+                if (!dict.ContainsKey(keys[currIndex]))
+                    dict[keys[currIndex]] = new Dictionary<string, object>();
+
+                if (dict[keys[currIndex]].GetType() == typeof(Dictionary<string, object>))
+                {
+                    SetValue(
+                        dict[keys[currIndex]] as Dictionary<string, object>,
+                        keys,
+                        value,
+                        ++currIndex);
+                }
+                else
+                {
+                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary");
+                }
             }
         }
     }
