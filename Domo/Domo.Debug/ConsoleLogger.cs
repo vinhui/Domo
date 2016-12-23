@@ -6,7 +6,8 @@ namespace Domo.Debug
     {
         public override void Log(LogType type, string msg)
         {
-            Console.WriteLine(type.ToString() + ": " + msg);
+            string t = type.ToString();
+            Console.WriteLine(("[" + t + "]").PadRight(8, ' ') + ": " + msg);
         }
     }
 }
