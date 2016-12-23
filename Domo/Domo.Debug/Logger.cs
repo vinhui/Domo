@@ -6,7 +6,7 @@ namespace Domo.Debug
     {
         public virtual void LogDebug(string line)
         {
-            Log(LogType.Info, line);
+            Log(LogType.Debug, line);
         }
 
         public virtual void LogInfo(string line)
@@ -16,12 +16,12 @@ namespace Domo.Debug
 
         public virtual void LogWarning(string line)
         {
-            Log(LogType.Info, line);
+            Log(LogType.Warning, line);
         }
 
         public virtual void LogError(string line)
         {
-            Log(LogType.Info, line);
+            Log(LogType.Error, line);
         }
 
         public virtual void LogException(Exception ex)
