@@ -26,12 +26,6 @@ namespace Domo.Main
         private static Dictionary<string, object> defaultData = new Dictionary<string, object>()
         {
             { "minLogLevel", "-1" },
-            {
-                "test",
-                new Dictionary<string, object>() {
-                    { "test", "haai" }
-                }
-            },
         };
 
         /// <summary>
