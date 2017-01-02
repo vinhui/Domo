@@ -40,13 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="Debug\ConsoleLogger.cs" />
+    <Compile Include="Debug\Log.cs" />
+    <Compile Include="Debug\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domo.Debug\Domo.Debug.csproj">
-      <Project>{D3116925-88A8-49C6-B813-D9D83ED729F3}</Project>
-      <Name>Domo.Debug</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Domo.Serialization\Domo.Serialization.csproj">
       <Project>{afe55739-f8bf-4f34-9e99-196928621e68}</Project>
       <Name>Domo.Serialization</Name>

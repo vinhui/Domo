@@ -1,11 +1,12 @@
-﻿using Domo.Serialization;
+﻿using Domo.Main.Debug;
+using Domo.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Domo.Conf
+namespace Domo.Main
 {
     public static class Config
     {
