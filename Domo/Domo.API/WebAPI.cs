@@ -2,12 +2,15 @@
 using Domo.Misc.Debug;
 using Nancy.Hosting.Self;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Domo.API
 {
     public class WebAPI : IApiBase
     {
-        public NancyHost host;
+        private NancyHost host;
+        private List<KeyValuePair<string, Action<ApiListenerData>>> listeners = new List<KeyValuePair<string, Action<ApiListenerData>>>();
 
         public void Init()
         {
@@ -49,10 +52,15 @@ namespace Domo.API
 
         public void RegisterListener(string key, Action<ApiListenerData> listener)
         {
+            listeners.Add(new KeyValuePair<string, Action<API.ApiListenerData>>(key, listener));
         }
 
         public void UnregisterListener(string key, Action<ApiListenerData> listener)
         {
+            int cnt = listeners.Count(x => x.Key == key && x.Value == listener);
+            Log.Info("Unregistering api listener for key '{0}', found {1} item{2}", key, cnt, (cnt != 1 ? "s" : ""));
+            if (cnt > 0)
+                listeners.RemoveAll(x => x.Key == key && x.Value == listener);
         }
 
         private void ExceptionHandler(Exception ex)
