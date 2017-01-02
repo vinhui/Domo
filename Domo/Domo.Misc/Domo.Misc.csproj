@@ -7,8 +7,8 @@
     <ProjectGuid>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domo.Main</RootNamespace>
-    <AssemblyName>Domo.Main</AssemblyName>
+    <RootNamespace>Domo.Misc</RootNamespace>
+    <AssemblyName>Domo.Misc</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

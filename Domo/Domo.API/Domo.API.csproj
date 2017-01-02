@@ -61,9 +61,9 @@
     <Analyzer Include="..\packages\AsyncUsageAnalyzers.1.0.0-alpha003\analyzers\dotnet\AsyncUsageAnalyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domo.Main\Domo.Main.csproj">
+    <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
       <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
-      <Name>Domo.Main</Name>
+      <Name>Domo.Misc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Main", "Domo.Main\Domo.Main.csproj", "{4AA27AFE-8E27-45D6-8186-07C36A08C851}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Misc", "Domo.Misc\Domo.Misc.csproj", "{4AA27AFE-8E27-45D6-8186-07C36A08C851}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Modules", "Domo.Modules\Domo.Modules.csproj", "{BBD08AE1-60B6-407C-9205-CA57011D9107}"
 EndProject

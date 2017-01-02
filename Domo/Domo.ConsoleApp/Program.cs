@@ -1,5 +1,5 @@
-﻿using Domo.Main;
-using Domo.Main.Debug;
+﻿using Domo.Misc;
+using Domo.Misc.Debug;
 using System;
 
 namespace Domo.ConsoleApp
