@@ -2,7 +2,7 @@
 
 namespace Domo.API
 {
-    public class ApiData
+    public class ApiListenerData
     {
         public KeyValuePair<string, object>[] arguments;
     }

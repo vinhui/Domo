@@ -47,11 +47,11 @@ namespace Domo.API
                 Log.Warning("Can't shut down web api, it isn't initialized");
         }
 
-        public void RegisterListener(string key, Action listener)
+        public void RegisterListener(string key, Action<ApiListenerData> listener)
         {
         }
 
-        public void UnregisterListener(string key, Action listener)
+        public void UnregisterListener(string key, Action<ApiListenerData> listener)
         {
         }
 

@@ -6,9 +6,9 @@ namespace Domo.API
     {
         void Init();
 
-        void RegisterListener(string key, Action listener);
+        void RegisterListener(string key, Action<ApiListenerData> listener);
 
-        void UnregisterListener(string key, Action listener);
+        void UnregisterListener(string key, Action<ApiListenerData> listener);
 
         void OnShutdown();
     }
