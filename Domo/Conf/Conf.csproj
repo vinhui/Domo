@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{960D8040-D38F-494D-A26C-1E37017C7E80}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0EBAB656-DD38-4176-84D8-76042738A487}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domo.ConsoleApp</RootNamespace>
-    <AssemblyName>Domo.ConsoleApp</AssemblyName>
+    <RootNamespace>Conf</RootNamespace>
+    <AssemblyName>Conf</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,24 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Conf\Conf.csproj">
-      <Project>{0EBAB656-DD38-4176-84D8-76042738A487}</Project>
-      <Name>Conf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.Debug\Domo.Debug.csproj">
-      <Project>{D3116925-88A8-49C6-B813-D9D83ED729F3}</Project>
-      <Name>Domo.Debug</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.Main\Domo.Main.csproj">
-      <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
-      <Name>Domo.Main</Name>
+    <ProjectReference Include="..\Domo.Serialization\Domo.Serialization.csproj">
+      <Project>{afe55739-f8bf-4f34-9e99-196928621e68}</Project>
+      <Name>Domo.Serialization</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

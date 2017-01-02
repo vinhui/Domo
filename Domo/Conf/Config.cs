@@ -1,12 +1,11 @@
-﻿using Domo.Debug;
-using Domo.Serialization;
+﻿using Domo.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Domo.Main
+namespace Domo.Conf
 {
     public static class Config
     {
@@ -26,6 +25,25 @@ namespace Domo.Main
         private static Dictionary<string, object> defaultData = new Dictionary<string, object>()
         {
             { "minLogLevel", "-1" },
+            {
+                "API",
+                new Dictionary<string, object>()
+                {
+                    {
+                        "web",
+                        new Dictionary<string, object>()
+                        {
+                            { "port", 80 },
+                            {
+                                "hostnames",
+                                new string[] {
+                                    "localhost",
+                                }
+                            },
+                        }
+                    }
+                }
+            },
         };
 
         /// <summary>
