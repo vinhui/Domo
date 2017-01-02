@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Domo.WebAPI
+namespace Domo.API
 {
     internal class ApiData
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domo.WebAPI
+namespace Domo.API
 {
     internal interface IApiBase
     {
