@@ -50,14 +50,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Conf\Conf.csproj">
-      <Project>{0EBAB656-DD38-4176-84D8-76042738A487}</Project>
-      <Name>Conf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.Debug\Domo.Debug.csproj">
-      <Project>{D3116925-88A8-49C6-B813-D9D83ED729F3}</Project>
-      <Name>Domo.Debug</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Domo.Main\Domo.Main.csproj">
       <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
       <Name>Domo.Main</Name>
