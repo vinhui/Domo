@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Scripting", "Domo.Scri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.Serialization", "Domo.Serialization\Domo.Serialization.csproj", "{AFE55739-F8BF-4F34-9E99-196928621E68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.WebAPI", "Domo.WebAPI\Domo.WebAPI.csproj", "{DFC5A6EC-E496-4B68-9A0D-8F775676293F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.API", "Domo.API\Domo.API.csproj", "{DFC5A6EC-E496-4B68-9A0D-8F775676293F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.ConsoleApp", "Domo.ConsoleApp\Domo.ConsoleApp.csproj", "{960D8040-D38F-494D-A26C-1E37017C7E80}"
 EndProject
