@@ -52,6 +52,7 @@
     <Compile Include="IApiBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebAPI.cs" />
+    <Compile Include="Web\Modules\WebRootModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
