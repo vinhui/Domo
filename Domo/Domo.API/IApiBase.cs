@@ -2,7 +2,7 @@
 
 namespace Domo.API
 {
-    internal interface IApiBase
+    public interface IApiBase
     {
         void Init();
 
