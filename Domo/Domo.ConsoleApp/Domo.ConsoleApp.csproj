@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Domo.API\Domo.API.csproj">
+      <Project>{DFC5A6EC-E496-4B68-9A0D-8F775676293F}</Project>
+      <Name>Domo.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
       <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
       <Name>Domo.Misc</Name>
