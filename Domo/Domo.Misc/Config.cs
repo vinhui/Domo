@@ -34,11 +34,10 @@ namespace Domo.Misc
                         "web",
                         new Dictionary<string, object>()
                         {
-                            { "port", 80 },
                             {
-                                "hostnames",
+                                "bindurls",
                                 new string[] {
-                                    "localhost",
+                                    "http://localhost:80/",
                                 }
                             },
                         }
