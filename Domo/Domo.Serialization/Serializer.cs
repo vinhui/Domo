@@ -16,6 +16,8 @@ namespace Domo.Serialization
             }
         }
 
+        public abstract string contentType { get; }
+
         public abstract string Serialize(object obj);
 
         public virtual T Deserialize<T>(string obj)

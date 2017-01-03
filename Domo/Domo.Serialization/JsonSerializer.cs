@@ -7,6 +7,11 @@ namespace Domo.Serialization
     {
         private JavaScriptSerializer serializer = new JavaScriptSerializer();
 
+        public override string contentType
+        {
+            get { return "application/json"; }
+        }
+
         public override string Serialize(object obj)
         {
             return serializer.Serialize(obj);
