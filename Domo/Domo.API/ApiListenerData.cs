@@ -4,6 +4,7 @@ namespace Domo.API
 {
     public class ApiListenerData
     {
-        public KeyValuePair<string, object>[] arguments;
+        public string key;
+        public IDictionary<string, object> arguments = new Dictionary<string, object>();
     }
 }
