@@ -13,17 +13,17 @@ namespace Domo.Misc
         /// <summary>
         /// Name of the config file
         /// </summary>
-        internal const string fileName = "config.json";
+        public const string fileName = "config.json";
 
         /// <summary>
-        /// Path to the config file
+        /// Path to the config file, including the filename
         /// </summary>
-        internal static string path { get; private set; }
+        public static string path { get; private set; }
 
         /// <summary>
         /// The default settings
         /// </summary>
-        private static Dictionary<string, object> defaultData = new Dictionary<string, object>()
+        private static readonly Dictionary<string, object> defaultData = new Dictionary<string, object>()
         {
             { "minLogLevel", "-1" },
             {
@@ -84,7 +84,7 @@ namespace Domo.Misc
         }
 
         /// <summary>
-        /// Load the config from file
+        /// Load all the data from the file
         /// </summary>
         public static void LoadFromFile()
         {
@@ -99,7 +99,7 @@ namespace Domo.Misc
         }
 
         /// <summary>
-        /// Write all the settings to the config file
+        /// Write all the data to the config file
         /// </summary>
         public static void WriteToFile()
         {
@@ -112,8 +112,10 @@ namespace Domo.Misc
         /// Get a value from the config
         /// </summary>
         /// <typeparam name="T">Return type</typeparam>
-        /// <param name="key">The keys to get the value from</param>
+        /// <param name="keys">The keys to get the value from</param>
         /// <returns>Returns the object cast to <paramref name="T"/></returns>
+        /// <exception cref="InvalidCastException">When it failed to cast the value to <paramref name="T"/></exception>
+        /// <exception cref="KeyNotFoundException">Gets thrown when the requested key chain does not exist</exception>
         public static T GetValue<T>(params string[] keys)
         {
             return GetValue<T>(data, 0, keys);
@@ -136,14 +138,12 @@ namespace Domo.Misc
                     }
                     else
                     {
-                        Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary, the type is '" + dict[keys[currIndex]].GetType().FullName + "'");
-                        return default(T);
+                        throw new InvalidCastException(string.Format("The value of '{0}' is not a dictionary, the type is '{1}'", string.Join(".", keys.Take(currIndex + 1)), dict[keys[currIndex]].GetType().FullName));
                     }
                 }
                 else
                 {
-                    Log.Error("There is no key chain '" + string.Join(".", keys) + "' in the config");
-                    return default(T);
+                    throw new KeyNotFoundException(string.Format("There is no key chain '{0}' in the config", string.Join(".", keys)));
                 }
             }
         }
@@ -155,6 +155,8 @@ namespace Domo.Misc
         /// <param name="dict">The dictionary to search in</param>
         /// <param name="key">The key to get the value from</param>
         /// <returns>Returns the object cast to <paramref name="T"/></returns>
+        /// <exception cref="InvalidCastException">When it failed to cast the value to <paramref name="T"/></exception>
+        /// <exception cref="KeyNotFoundException">Gets thrown when the key does not exist in <paramref name="dict"/></exception>
         private static T GetValue<T>(Dictionary<string, object> dict, string key)
         {
             // Check if the key is in the dictionary
@@ -171,15 +173,14 @@ namespace Domo.Misc
                     }
                     catch (InvalidCastException)
                     {
-                        Log.Error("Failed to cast the value of '" + key + "' to " + typeof(T));
+                        throw new InvalidCastException(string.Format("Failed to cast the value of '{0}' to {1}", key, typeof(T)));
                     }
                 }
             }
             else
             {
-                Log.Error("There is no key '" + key + "' in the dictionary");
+                throw new KeyNotFoundException(string.Format("There is no key '{0}' in the dictionary", key));
             }
-            return default(T);
         }
 
         /// <summary>
@@ -250,6 +251,7 @@ namespace Domo.Misc
         /// <param name="value"></param>
         /// <param name="keyIndexes"></param>
         /// <param name="currIndex"></param>
+        /// <exception cref="InvalidCastException">When the value of one of the keys (not the last one) is not a dictionary</exception>
         private static void SetValue(Dictionary<string, object> dict, string[] keys, object value, int currIndex)
         {
             if (dict == null)
@@ -277,7 +279,7 @@ namespace Domo.Misc
                 }
                 else
                 {
-                    Log.Error("The value of '" + string.Join(".", keys.Take(currIndex + 1)) + "' is not a dictionary");
+                    throw new InvalidCastException(string.Format("The value of '{0}' is not a dictionary", string.Join(".", keys.Take(currIndex + 1))));
                 }
             }
         }
