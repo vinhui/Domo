@@ -72,6 +72,7 @@
     <Compile Include="ConfigTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtils.cs" />
+    <Compile Include="SerializationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domo.API\Domo.API.csproj">
@@ -81,6 +82,10 @@
     <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
       <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
       <Name>Domo.Misc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domo.Serialization\Domo.Serialization.csproj">
+      <Project>{AFE55739-F8BF-4F34-9E99-196928621E68}</Project>
+      <Name>Domo.Serialization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
