@@ -1,7 +1,6 @@
 ﻿using Domo.Misc.Debug;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Domo.API
@@ -9,11 +8,23 @@ namespace Domo.API
     public static class ApiManager
     {
         private static List<ApiBase> _apis;
+
+        /// <summary>
+        /// All the registered API handlers
+        /// </summary>
         public static IEnumerable<ApiBase> apis { get { return _apis; } }
 
         private static Dictionary<string, Func<ApiRequest, ApiResponse>> _listeners;
+
+        /// <summary>
+        /// All the registered listeners
+        /// </summary>
         public static IReadOnlyDictionary<string, Func<ApiRequest, ApiResponse>> listeners { get { return _listeners; } }
 
+        /// <summary>
+        /// Initialize the API manager and APIs
+        /// If already initialzed, this will reset
+        /// </summary>
         public static void Init()
         {
             _apis = new List<ApiBase>();
@@ -25,6 +36,9 @@ namespace Domo.API
                 item.Init();
         }
 
+        /// <summary>
+        /// Get all the APIs from the current appdomain
+        /// </summary>
         private static void GetApis()
         {
             IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -40,16 +54,22 @@ namespace Domo.API
                         {
                             ApiBase instance = Activator.CreateInstance(type) as ApiBase;
                             _apis.Add(instance);
-                            Log.Debug("Found api '{0}' in assembly '{1}'", type.Name, assembly.FullName);
+                            Log.Debug("Found API '{0}' in assembly '{1}'", type.Name, assembly.FullName);
                             cnt++;
                         }
                     }
                 }
             }
 
-            Log.Info("Found {0} apis", cnt);
+            Log.Info("Found {0} APIs", cnt);
         }
 
+        /// <summary>
+        /// Register a new API listener
+        /// You can't register multiple listeners for one key
+        /// </summary>
+        /// <param name="key">The key to register a listener for</param>
+        /// <param name="listener">The listener that gets called</param>
         public static void RegisterListener(string key, Func<ApiRequest, ApiResponse> listener)
         {
             if (!_listeners.ContainsKey(key))
@@ -69,6 +89,11 @@ namespace Domo.API
             }
         }
 
+        /// <summary>
+        /// Unregister a listener so that it wont get new calls
+        /// </summary>
+        /// <param name="key">The key to unregister for</param>
+        /// <exception cref="KeyNotFoundException">Throws an exception when the key provided is not registered</exception>
         public static void UnregisterListener(string key)
         {
             if (!_listeners.ContainsKey(key))
@@ -89,6 +114,9 @@ namespace Domo.API
             }
         }
 
+        /// <summary>
+        /// This should be called when the application shuts down
+        /// </summary>
         public static void OnShutdown()
         {
             foreach (var item in apis)

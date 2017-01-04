@@ -11,6 +11,7 @@ namespace Domo.API.Web.Modules
     {
         public ApiKeyModule() : base("/api")
         {
+            // Root response
             Get("/", (parameters) =>
             {
                 string responseJson = new ApiResponse()
@@ -21,6 +22,7 @@ namespace Domo.API.Web.Modules
                 return Response.AsText(responseJson, Serializer.instance.contentType);
             });
 
+            // Response for when a key is provided
             Get("/{key}", (parameters) =>
             {
                 Log.Debug("Api request for key '{0}'", parameters.key);
@@ -30,6 +32,12 @@ namespace Domo.API.Web.Modules
             });
         }
 
+        /// <summary>
+        /// Run the request through all the api listeners
+        /// </summary>
+        /// <param name="key">The key to check the listeners for</param>
+        /// <param name="arguments">Data to pass through to the listener</param>
+        /// <returns>Returns a proper API response that can be directly returned to the client</returns>
         private ApiResponse RunRequest(string key, IDictionary<string, object> arguments)
         {
             if (!string.IsNullOrEmpty(key))
