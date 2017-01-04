@@ -5,6 +5,7 @@ namespace Domo.Serialization
     public abstract class Serializer
     {
         private static Serializer _instance;
+
         public static Serializer instance
         {
             get

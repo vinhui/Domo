@@ -1,9 +1,7 @@
 ﻿using Domo.API;
-using Domo.API.Web;
 using Domo.Misc;
 using Domo.Misc.Debug;
 using System;
-using System.Linq;
 
 namespace Domo.ConsoleApp
 {
@@ -31,8 +29,6 @@ namespace Domo.ConsoleApp
 
         private static ApiResponse handler(ApiListenerData data)
         {
-            Log.Debug("Received data for key '{0}'", data.key);
-
             return new ApiResponse()
             {
                 code = 0,
