@@ -5,7 +5,7 @@ namespace Domo.API
 {
     public abstract class ApiBase
     {
-        public IEnumerable<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>> listeners
+        public IEnumerable<KeyValuePair<string, Func<ApiRequest, ApiResponse>>> listeners
         {
             get { return ApiManager.listeners; }
         }
@@ -16,7 +16,7 @@ namespace Domo.API
         {
         }
 
-        public virtual void OnListenerRegistered(string key, Func<ApiListenerData, ApiResponse> listener)
+        public virtual void OnListenerRegistered(string key, Func<ApiRequest, ApiResponse> listener)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Domo.API
         {
         }
 
-        public virtual void OnListenerRemoved(string key, Func<ApiListenerData, ApiResponse> listener)
+        public virtual void OnListenerRemoved(string key, Func<ApiRequest, ApiResponse> listener)
         {
         }
 

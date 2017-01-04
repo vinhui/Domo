@@ -40,7 +40,7 @@ namespace Domo.API.Web.Modules
                 {
                     return listeners[key]
                         .Invoke(
-                            new ApiListenerData()
+                            new ApiRequest()
                             {
                                 key = key,
                                 arguments = arguments

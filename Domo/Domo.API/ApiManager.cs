@@ -50,7 +50,7 @@ namespace Domo.API
             Log.Info("Found {0} apis", cnt);
         }
 
-        public static void RegisterListener(string key, Func<ApiListenerData, ApiResponse> listener)
+        public static void RegisterListener(string key, Func<ApiRequest, ApiResponse> listener)
         {
             if (!_listeners.ContainsKey(key))
             {

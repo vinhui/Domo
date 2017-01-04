@@ -53,7 +53,7 @@ namespace Domo.Testing
             Assert.IsTrue(result.Result.Body.AsString().Contains("Bar"));
         }
 
-        private static ApiResponse TestListener(ApiListenerData data)
+        private static ApiResponse TestListener(ApiRequest data)
         {
             return new ApiResponse()
             {
