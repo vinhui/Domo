@@ -11,6 +11,16 @@ namespace Domo.API.Web.Modules
     {
         public ApiKeyModule() : base("/api")
         {
+            Get("/", (parameters) =>
+            {
+                string responseJson = new ApiResponse()
+                {
+                    code = ApiCodes.NoKeyProvided,
+                    success = false,
+                }.Serialize();
+                return Response.AsText(responseJson, Serializer.instance.contentType);
+            });
+
             Get("/{key}", (parameters) =>
             {
                 Log.Debug("Api request for key '{0}'", parameters.key);
