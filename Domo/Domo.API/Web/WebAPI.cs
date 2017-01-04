@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Domo.API.Web
 {
-    public class WebAPI : IApiBase
+    public class WebAPI : ApiBase
     {
         internal static WebAPI instance;
         private const string defaultHostname = "http://localhost:80/api/";
@@ -24,7 +24,7 @@ namespace Domo.API.Web
                 Log.Error("You are trying to create multiple instances of WebAPI");
         }
 
-        public void Init()
+        public override void Init()
         {
             Log.Debug("Starting web api");
 
@@ -58,7 +58,7 @@ namespace Domo.API.Web
             Log.Info("Web api has started");
         }
 
-        public void OnShutdown()
+        public override void OnShutdown()
         {
             Log.Info("Shutting down web api");
 

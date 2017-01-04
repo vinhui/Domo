@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="ApiCodes.cs" />
     <Compile Include="ApiListenerData.cs" />
-    <Compile Include="IApiBase.cs" />
+    <Compile Include="ApiBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Web\WebAPI.cs" />
     <Compile Include="ApiResponse.cs" />
