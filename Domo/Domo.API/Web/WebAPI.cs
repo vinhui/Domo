@@ -10,19 +10,8 @@ namespace Domo.API.Web
 {
     public class WebAPI : ApiBase
     {
-        internal static WebAPI instance;
         private const string defaultHostname = "http://localhost:80/api/";
         private NancyHost host;
-        private List<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>> _listeners = new List<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>>();
-        public static IEnumerable<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>> listeners { get { return instance._listeners; } }
-
-        public WebAPI()
-        {
-            if (instance == null)
-                instance = this;
-            else
-                Log.Error("You are trying to create multiple instances of WebAPI");
-        }
 
         public override void Init()
         {
@@ -66,19 +55,6 @@ namespace Domo.API.Web
                 host.Stop();
             else
                 Log.Warning("Can't shut down web api, it isn't initialized");
-        }
-
-        public void RegisterListener(string key, Func<ApiListenerData, ApiResponse> listener)
-        {
-            _listeners.Add(new KeyValuePair<string, Func<ApiListenerData, ApiResponse>>(key, listener));
-        }
-
-        public void UnregisterListener(string key, Func<ApiListenerData, ApiResponse> listener)
-        {
-            int cnt = _listeners.Count(x => x.Key == key && x.Value == listener);
-            Log.Info("Unregistering api listener for key '{0}', found {1} item{2}", key, cnt, (cnt != 1 ? "s" : ""));
-            if (cnt > 0)
-                _listeners.RemoveAll(x => x.Key == key && x.Value == listener);
         }
 
         private void ExceptionHandler(Exception ex)

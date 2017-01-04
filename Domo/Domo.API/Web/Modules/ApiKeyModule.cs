@@ -24,7 +24,7 @@ namespace Domo.API.Web.Modules
         {
             if (!string.IsNullOrEmpty(key))
             {
-                IEnumerable<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>> listeners = WebAPI.listeners;
+                IEnumerable<KeyValuePair<string, Func<ApiListenerData, ApiResponse>>> listeners = ApiManager.listeners;
 
                 if (listeners.Any(x => x.Key == key))
                 {

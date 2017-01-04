@@ -20,12 +20,11 @@ namespace Domo.ConsoleApp
             else
                 Log.Error("Config doesn't work properly!");
 #endif
-            IApiBase api = new WebAPI();
-            api.Init();
-            api.RegisterListener("test", handler);
+            ApiManager.Init();
+            ApiManager.RegisterListener("test", handler);
 
             Console.ReadKey();
-            api.OnShutdown();
+            ApiManager.OnShutdown();
 
             Console.ReadKey();
         }
