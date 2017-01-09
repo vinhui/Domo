@@ -8,7 +8,7 @@ namespace Domo.Testing
     public class SerializationTest
     {
         [TestMethod]
-        public void GeneralSerialization()
+        public void Serialization_General()
         {
             var test = new TestObject()
             {

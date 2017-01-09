@@ -7,7 +7,7 @@ namespace Domo.Testing
     public class ConfigTest
     {
         [TestMethod]
-        public void SetValue()
+        public void Config_SetValue()
         {
             TestUtils.SetEntryAssembly();
 

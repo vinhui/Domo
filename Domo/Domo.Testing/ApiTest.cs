@@ -9,7 +9,7 @@ namespace Domo.Testing
     public class ApiTest
     {
         [TestMethod]
-        public void WebServer()
+        public void Api_WebServer()
         {
             TestUtils.SetEntryAssembly();
 
@@ -30,7 +30,7 @@ namespace Domo.Testing
         }
 
         [TestMethod]
-        public void WebApi()
+        public void Api_Web()
         {
             TestUtils.SetEntryAssembly();
 
