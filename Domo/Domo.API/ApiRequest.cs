@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Domo.API
 {
@@ -15,5 +16,10 @@ namespace Domo.API
         /// Arguments from the request
         /// </summary>
         public IDictionary<string, object> arguments = new Dictionary<string, object>();
+
+        public T GetArgument<T>(string key)
+        {
+            return (T)Convert.ChangeType(arguments[key], typeof(T));
+        }
     }
 }
