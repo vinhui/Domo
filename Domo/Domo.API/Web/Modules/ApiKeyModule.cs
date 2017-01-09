@@ -14,11 +14,7 @@ namespace Domo.API.Web.Modules
             // Root response
             Get("/", (parameters) =>
             {
-                string responseJson = new ApiResponse()
-                {
-                    code = ApiCodes.NoKeyProvided,
-                    success = false,
-                }.Serialize();
+                string responseJson = ApiResponse.Failed(ApiCodes.NoKeyProvided, "There was no key provided").Serialize();
                 return Response.AsText(responseJson, Serializer.instance.contentType);
             });
 
@@ -57,20 +53,12 @@ namespace Domo.API.Web.Modules
                 }
                 else
                 {
-                    return new ApiResponse()
-                    {
-                        code = ApiCodes.UnknownKey,
-                        success = false
-                    };
+                    return ApiResponse.Failed(ApiCodes.UnknownKey, "The key provided was not recognized");
                 }
             }
             else
             {
-                return new ApiResponse()
-                {
-                    code = ApiCodes.NoKeyProvided,
-                    success = false,
-                };
+                return ApiResponse.Failed(ApiCodes.NoKeyProvided, "There was no key provided");
             }
         }
     }
