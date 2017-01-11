@@ -119,6 +119,9 @@ namespace Domo.API
         /// </summary>
         public static void OnShutdown()
         {
+            if (apis == null)
+                return;
+
             foreach (var item in apis)
             {
                 item.OnShutdown();
