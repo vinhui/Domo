@@ -49,6 +49,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorModule.cs" />
     <Compile Include="SensorTriggerModule.cs" />
+    <Compile Include="UI\ApiListenerUI.cs" />
+    <Compile Include="UI\Controls\Button.cs" />
+    <Compile Include="UI\Controls\Control.cs" />
+    <Compile Include="UI\Controls\Label.cs" />
+    <Compile Include="UI\IUIModule.cs" />
+    <Compile Include="UI\UIModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domo.API\Domo.API.csproj">
+      <Project>{DFC5A6EC-E496-4B68-9A0D-8F775676293F}</Project>
+      <Name>Domo.API</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
