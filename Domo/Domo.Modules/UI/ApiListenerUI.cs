@@ -61,7 +61,7 @@ namespace Domo.Modules.UI
                 ApiCodes.Sucess,
                 new Dictionary<string, object>()
                 {
-                    { "modules", modules}
+                    { "modules", modules }
                 }
             );
         }
