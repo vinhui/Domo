@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace Domo.Modules.UI
 {
@@ -29,6 +30,7 @@ namespace Domo.Modules.UI
             return m;
         }
 
+        [ScriptIgnore]
         public ModuleBase owner { get; private set; }
 
         public string title;
@@ -40,6 +42,7 @@ namespace Domo.Modules.UI
         public UIModule(ModuleBase owner)
         {
             this.owner = owner;
+            _controls = new List<Control>();
         }
 
         public Control AddControl(Func<UIModule, Control> create)

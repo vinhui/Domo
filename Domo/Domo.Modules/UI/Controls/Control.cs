@@ -1,4 +1,6 @@
-﻿namespace Domo.Modules.UI.Controls
+﻿using System.Web.Script.Serialization;
+
+namespace Domo.Modules.UI.Controls
 {
     public delegate void ClickEvent(UIModule owner);
 
@@ -10,6 +12,7 @@
         public int minWidth;
         public int minHeight;
 
+        [ScriptIgnore]
         public UIModule owner { get; private set; }
 
         public Control(UIModule owner)
