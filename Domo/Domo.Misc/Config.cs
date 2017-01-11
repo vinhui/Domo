@@ -1,6 +1,7 @@
 ﻿using Domo.Misc.Debug;
 using Domo.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace Domo.Misc
                         {
                             {
                                 "bindurls",
-                                new string[] {
+                                new ArrayList {
                                     "http://localhost:80/",
                                 }
                             },
