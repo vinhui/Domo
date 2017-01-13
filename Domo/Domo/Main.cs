@@ -1,4 +1,5 @@
 ﻿using Domo.API;
+using Domo.Packaging;
 
 namespace Domo
 {
@@ -6,7 +7,11 @@ namespace Domo
     {
         public static void Init()
         {
-            ApiManager.Init();
+            //ApiManager.Init();
+
+            PackageManager pm = new PackageManager();
+            pm.LoadPackages();
+
         }
 
         public static void ShutDown()

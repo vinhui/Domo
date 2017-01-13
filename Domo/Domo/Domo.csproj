@@ -48,6 +48,10 @@
       <Project>{DFC5A6EC-E496-4B68-9A0D-8F775676293F}</Project>
       <Name>Domo.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Domo.Packaging\Domo.Packaging.csproj">
+      <Project>{DA028327-C86B-4EE8-9955-39FDCF2E05E2}</Project>
+      <Name>Domo.Packaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
