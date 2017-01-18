@@ -1,8 +1,28 @@
 ﻿namespace Domo.Modules
 {
-    public abstract class SensorTriggerModule<T, U> : ModuleBase where T : SensorModule<U> where U : HardwareInterfaceModule
+    /// <summary>
+    /// Base class for things that need to happen based off of sensors
+    /// </summary>
+    /// <typeparam name="T">Sensor that should be auto-filled</typeparam>
+    /// <typeparam name="U">Controller that should be auto-filled</typeparam>
+    public abstract class SensorTriggerModule<T, U> : SensorTriggerModule<T>
+        where T : ISensorModule, new()
+        where U : IControllerModule, new()
     {
-        public delegate void SensorTriggerEvent(SensorModule<U> sensor);
+        /// <summary>
+        /// Access the controller
+        /// </summary>
+        [AutoFillGeneric]
+        public U controller { get; private set; }
+    }
+
+    /// <summary>
+    /// Base class for things that need to happen based off of sensors
+    /// </summary>
+    /// <typeparam name="T">Sensor that should be auto-filled</typeparam>
+    public abstract class SensorTriggerModule<T> : SensorTriggerModule where T : ISensorModule
+    {
+        public delegate void SensorTriggerEvent(T sensor);
 
         /// <summary>
         /// Gets called when it triggers
@@ -12,8 +32,23 @@
         /// <summary>
         /// Access to the sensor
         /// </summary>
+        [AutoFillGeneric]
         public T sensor { get; private set; }
 
+        /// <summary>
+        /// Gets called when it triggers
+        /// </summary>
+        public override void OnTrigger()
+        {
+            onTrigger(sensor);
+        }
+    }
+
+    /// <summary>
+    /// Base class for things that need to happen based off of sensors
+    /// </summary>
+    public abstract class SensorTriggerModule : ModuleBase
+    {
         /// <summary>
         /// Is it allowed to trigger
         /// </summary>
@@ -23,9 +58,6 @@
         /// <summary>
         /// Gets called when it triggers
         /// </summary>
-        public virtual void OnTrigger()
-        {
-            onTrigger(sensor);
-        }
+        public abstract void OnTrigger();
     }
 }
