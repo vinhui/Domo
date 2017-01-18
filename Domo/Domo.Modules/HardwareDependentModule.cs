@@ -6,11 +6,12 @@ namespace Domo.Modules
     /// Base class for any modules that depend on hardware
     /// </summary>
     /// <typeparam name="T">Hardware interface it depends on</typeparam>
-    public abstract class HardwareDependentModule<T> : ModuleBase where T : HardwareInterfaceModule
+    public abstract class HardwareDependentModule<T> : ModuleBase where T : HardwareInterfaceModule, new()
     {
         /// <summary>
         /// Access to the hardware interface
         /// </summary>
+        [AutoFillGeneric]
         public T hardwareInterface { get; private set; }
 
         /// <summary>
