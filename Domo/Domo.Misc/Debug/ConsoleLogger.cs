@@ -6,6 +6,19 @@ namespace Domo.Misc.Debug
     {
         public override void Log(LogType type, string msg)
         {
+            switch (type)
+            {
+                case LogType.Warning:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case LogType.Error:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+            }
+
             string t = type.ToString();
             Console.WriteLine(("[" + t + "]").PadRight(8, ' ') + ": " + msg);
         }
