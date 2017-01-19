@@ -1,4 +1,5 @@
 ﻿using Domo.API;
+using Domo.Modules;
 using Domo.Packaging;
 
 namespace Domo
@@ -12,6 +13,7 @@ namespace Domo
             PackageManager pm = new PackageManager();
             pm.LoadPackages();
 
+            ModuleManager.LoadAllModules();
         }
 
         public static void ShutDown()

@@ -1,5 +1,6 @@
 ﻿using Domo.Misc.Debug;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Domo.Modules
@@ -27,10 +28,16 @@ namespace Domo.Modules
         /// </summary>
         public static void LoadAllModules()
         {
+            Log.Info("Loading all assemblies in the current app domain");
+            Stopwatch s = Stopwatch.StartNew();
+
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {
                 LoadModules(item);
             }
+
+            s.Stop();
+            Log.Info("Finished loading all assemblies in {0}ms", s.ElapsedMilliseconds);
         }
 
         /// <summary>
@@ -39,7 +46,13 @@ namespace Domo.Modules
         /// <param name="assembly">Assembly to load modules from</param>
         public static void LoadModules(Assembly assembly)
         {
+            Log.Info("Loading all modules from assembly {0}", assembly.FullName);
+            Stopwatch s = Stopwatch.StartNew();
+
             factory.LoadModules(assembly);
+
+            s.Stop();
+            Log.Debug("Loading modules from assembly {0} took {1}ms", assembly.FullName, s.ElapsedMilliseconds);
         }
 
         /// <summary>
