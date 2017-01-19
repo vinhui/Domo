@@ -137,28 +137,35 @@ namespace Domo.Packaging
             List<Tuple<string, Version, PackageManifest>> availablePackages = new List<Tuple<string, Version, PackageManifest>>();
 
             Log.Debug("Indexing all packages");
-            string[] directories = Directory.GetDirectories(Path.Combine(Directory.GetCurrentDirectory(), path));
-            foreach (string directory in directories)
+            string absolutePath = Path.Combine(Directory.GetCurrentDirectory(), path);
+
+            if (Directory.Exists(absolutePath))
             {
-                string[] versionDirectories = Directory.GetDirectories(directory);
-                foreach (string versionDir in versionDirectories)
+                string[] directories = Directory.GetDirectories(path);
+                foreach (string directory in directories)
                 {
-                    IEnumerable<string> files = Directory.EnumerateFiles(versionDir);
-                    string manifestPath = files.FirstOrDefault(x => x == Path.Combine(versionDir, manifestName));
-
-                    if (!string.IsNullOrEmpty(manifestPath))
+                    string[] versionDirectories = Directory.GetDirectories(directory);
+                    foreach (string versionDir in versionDirectories)
                     {
-                        string manifestContent = File.ReadAllText(manifestPath);
-                        PackageManifest manifest = Serializer.instance.Deserialize<PackageManifest>(manifestContent);
+                        IEnumerable<string> files = Directory.EnumerateFiles(versionDir);
+                        string manifestPath = files.FirstOrDefault(x => x == Path.Combine(versionDir, manifestName));
 
-                        Version version = new Version(new DirectoryInfo(versionDir).Name);
+                        if (!string.IsNullOrEmpty(manifestPath))
+                        {
+                            string manifestContent = File.ReadAllText(manifestPath);
+                            PackageManifest manifest = Serializer.instance.Deserialize<PackageManifest>(manifestContent);
 
-                        Log.Debug("Found package {0}, version {1} at {2}", manifest.name, version, manifestPath);
+                            Version version = new Version(new DirectoryInfo(versionDir).Name);
 
-                        availablePackages.Add(new Tuple<string, Version, PackageManifest>(versionDir, version, manifest));
+                            Log.Debug("Found package {0}, version {1} at {2}", manifest.name, version, manifestPath);
+
+                            availablePackages.Add(new Tuple<string, Version, PackageManifest>(versionDir, version, manifest));
+                        }
                     }
                 }
             }
+            else
+                Log.Warning("Packages directory does not exist ({0})", absolutePath);
 
             return availablePackages;
         }
