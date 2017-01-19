@@ -15,7 +15,7 @@ namespace Domo.Misc.Debug
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
                 default:
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ResetColor();
                     break;
             }
 
