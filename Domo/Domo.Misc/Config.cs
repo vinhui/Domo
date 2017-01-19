@@ -45,6 +45,24 @@ namespace Domo.Misc
                     }
                 }
             },
+            {
+                "packaging",
+                new Dictionary<string, object>()
+                {
+                    {
+                        "path",
+                        "Packages/"
+                    },
+                    {
+                        "manifestName",
+                        "Manifest.json"
+                    },
+                    {
+                        "scriptExtension",
+                        "py"
+                    }
+                }
+            },
         };
 
         /// <summary>
