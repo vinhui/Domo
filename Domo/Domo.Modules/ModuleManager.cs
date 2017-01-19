@@ -46,13 +46,13 @@ namespace Domo.Modules
         /// <param name="assembly">Assembly to load modules from</param>
         public static void LoadModules(Assembly assembly)
         {
-            Log.Info("Loading all modules from assembly {0}", assembly.FullName);
+            Log.Info("Loading all modules from assembly {0}", assembly.GetName().Name);
             Stopwatch s = Stopwatch.StartNew();
 
             factory.LoadModules(assembly);
 
             s.Stop();
-            Log.Debug("Loading modules from assembly {0} took {1}ms", assembly.FullName, s.ElapsedMilliseconds);
+            Log.Debug("Loading modules from assembly {0} took {1}ms", assembly.GetName().Name, s.ElapsedMilliseconds);
         }
 
         /// <summary>
