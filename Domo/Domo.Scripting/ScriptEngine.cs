@@ -66,6 +66,10 @@ namespace Domo.Scripting
         private PythonEngine CreatePythonEngine(out ScriptScope globalScope)
         {
             PythonEngine e = Python.CreateEngine();
+            foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                e.Runtime.LoadAssembly(item);
+            }
             globalScope = e.CreateScope();
             globalScope.SetVariable("Print", new Action<string>(Log.Info));
 
