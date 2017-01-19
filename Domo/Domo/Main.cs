@@ -13,6 +13,7 @@ namespace Domo
             PackageManager pm = new PackageManager();
             pm.LoadPackages();
 
+            ModuleManager.Init();
             ModuleManager.LoadAllModules();
         }
 

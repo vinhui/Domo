@@ -21,13 +21,11 @@ namespace Domo.Modules
         {
             foreach (var item in assembly.GetTypes())
             {
-                try
+                if (CheckType(item, false))
                 {
-                    CheckType(item);
                     ModuleBase module = (ModuleBase)Activator.CreateInstance(item);
                     modules.Add(item, module);
                 }
-                catch (TypeLoadException) { }
             }
 
             foreach (var item in modules)
@@ -106,12 +104,22 @@ namespace Domo.Modules
             }
         }
 
-        private void CheckType(Type t)
+        private bool CheckType(Type t, bool throwException = true)
         {
-            if (t.IsSubclassOf(typeof(ModuleBase)))
-                throw new TypeLoadException(string.Format("The type of module you're trying to get an instance ({0}) of does not derive of '{1}'", t.FullName, typeof(ModuleBase).FullName));
-            if (t.IsAbstract)
-                throw new TypeLoadException(string.Format("The module of type '{0}' that you're trying to get an instance of is abstract", t.FullName));
+            if (!t.IsSubclassOf(typeof(ModuleBase)))
+            {
+                if (throwException)
+                    throw new TypeLoadException(string.Format("The type of module you're trying to get an instance ({0}) of does not derive of '{1}'", t.FullName, typeof(ModuleBase).FullName));
+                return false;
+            }
+            else if (t.IsAbstract)
+            {
+                if (throwException)
+                    throw new TypeLoadException(string.Format("The module of type '{0}' that you're trying to get an instance of is abstract", t.FullName));
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
