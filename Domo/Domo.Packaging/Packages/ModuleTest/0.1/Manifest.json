@@ -1,0 +1,9 @@
+{
+  "name": "ModuleTest",
+  "description": "Test Description",
+  "iconPath": null,
+  "permissions": [
+  ],
+  "dependencies": [
+  ]
+}
