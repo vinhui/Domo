@@ -7,7 +7,8 @@ namespace Domo.Modules
     /// </summary>
     /// <exception cref="NotSupportedException">Gets thrown when the hardware interface is read only</exception>
     /// <typeparam name="T">Type of the hardware interface</typeparam>
-    public abstract class ControllerModule<T> : HardwareDependentModule<T> where T : HardwareInterfaceModule, IControllerModule
+    public abstract class ControllerModule<T> : HardwareDependentModule<T>, IControllerModule
+        where T : HardwareInterfaceModule
     {
         public ControllerModule()
         {
