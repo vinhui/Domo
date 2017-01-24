@@ -166,6 +166,7 @@ namespace Domo.Modules
         /// </summary>
         public void Dispose()
         {
+            Log.Debug("Disposing of the module factory");
             foreach (var item in modules)
             {
                 item.Value.OnDisable();
