@@ -20,6 +20,7 @@ namespace Domo
         public static void ShutDown()
         {
             ApiManager.OnShutdown();
+            ModuleManager.ShutDown();
         }
     }
 }
