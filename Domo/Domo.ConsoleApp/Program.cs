@@ -5,6 +5,8 @@ namespace Domo.ConsoleApp
 {
     internal class Program
     {
+        private static bool isShuttingDown = false;
+
         private static void Main(string[] args)
         {
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
@@ -12,11 +14,14 @@ namespace Domo.ConsoleApp
 
 
             Console.ReadKey();
+            isShuttingDown = true;
+            Domo.Main.ShutDown();
         }
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            Domo.Main.ShutDown();
+            if (!isShuttingDown)
+                Domo.Main.ShutDown();
         }
     }
 }
