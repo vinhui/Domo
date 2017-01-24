@@ -29,7 +29,7 @@ namespace Domo.Modules
         /// </summary>
         public static void LoadAllModules(IEnumerable<Package> packages)
         {
-            Log.Info("Loading all assemblies in the current app domain");
+            Log.Info("Loading all modules from the currently loaded packages");
             Stopwatch s = Stopwatch.StartNew();
 
             factory.LoadModules(packages.Select(x => x.engine));
