@@ -16,12 +16,13 @@ namespace Domo.Scripting
 {
     public class ScriptEngine
     {
-        private PythonEngine engine;
-        private ScriptScope scope;
+        public PythonEngine engine { get; private set; }
+        private ScriptScope _scope;
+        public ScriptScope scope { get { return _scope; } }
 
         public ScriptEngine()
         {
-            engine = CreatePythonEngine(out scope);
+            engine = CreatePythonEngine(out _scope);
         }
 
         public void AddReference(ScriptEngine engine)
