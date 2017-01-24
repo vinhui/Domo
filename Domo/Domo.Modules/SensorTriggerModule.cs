@@ -6,8 +6,8 @@
     /// <typeparam name="T">Sensor that should be auto-filled</typeparam>
     /// <typeparam name="U">Controller that should be auto-filled</typeparam>
     public abstract class SensorTriggerModule<T, U> : SensorTriggerModule<T>
-        where T : ISensorModule, new()
-        where U : IControllerModule, new()
+        where T : ISensorModule
+        where U : IControllerModule
     {
         /// <summary>
         /// Access the controller
