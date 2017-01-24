@@ -1,8 +1,6 @@
 ﻿using Domo.Misc.Debug;
 using IronPython.Runtime;
-using IronPython.Runtime.Operations;
 using IronPython.Runtime.Types;
-using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -49,29 +47,19 @@ namespace Domo.Modules
         /// </summary>
         /// <param name="scope">Scope to get modules from</param>
         /// <exception cref="ArgumentException">Gets thrown when the type is already loaded</exception>
-        public void LoadModules(IEnumerable<ScriptScope> scopes)
+        public void LoadModules(IEnumerable<Scripting.ScriptEngine> engines)
         {
-            foreach (var scope in scopes)
+            List<PythonType> types = new List<PythonType>();
+
+            foreach (var engine in engines)
             {
-                foreach (var item in scope.GetItems())
+                foreach (var type in engine.GetTypes<ModuleBase>())
                 {
-                    if (item.Value is PythonType)
-                    {
-                        PythonType type = item.Value;
-
-                        if (PythonOps.IsSubClass(type, DynamicHelpers.GetPythonTypeFromType(typeof(ModuleBase))))
-                        {
-                            Type t = ClrModule.GetClrType(type);
-
-                            if (!t.IsAbstract)
-                            {
-                                modules.Add(
-                                    ClrModule.GetClrType(type),
-                                    scope.Engine.Operations.CreateInstance(type) as ModuleBase
-                                    );
-                            }
-                        }
-                    }
+                    Log.Debug("Found module '{0}'", PythonType.Get__name__(type));
+                    modules.Add(
+                        ClrModule.GetClrType(type),
+                        engine.engine.Operations.CreateInstance(type) as ModuleBase
+                        );
                 }
             }
 
@@ -80,11 +68,15 @@ namespace Domo.Modules
                 FixReferences(item.Value);
             }
 
+            Log.Info("Found a total of {0} modules", modules.Count);
+
             // All the references should be assigned before going into the OnEnable
             foreach (var item in modules)
             {
                 item.Value.OnEnable();
             }
+
+            Log.Debug("Called all OnEnable methods on the modules");
         }
 
         /// <summary>

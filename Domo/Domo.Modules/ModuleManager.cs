@@ -32,10 +32,10 @@ namespace Domo.Modules
             Log.Info("Loading all assemblies in the current app domain");
             Stopwatch s = Stopwatch.StartNew();
 
-            factory.LoadModules(packages.Select(x => x.engine.scope));
+            factory.LoadModules(packages.Select(x => x.engine));
 
             s.Stop();
-            Log.Info("Finished loading all assemblies in {0}ms", s.ElapsedMilliseconds);
+            Log.Info("Finished loading all modules in {0}ms", s.ElapsedMilliseconds);
         }
 
         /// <summary>
