@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Microsoft.Scripting.Hosting;
-using PythonEngine = Microsoft.Scripting.Hosting.ScriptEngine;
+﻿using Domo.Misc.Debug;
 using IronPython.Hosting;
-using IronPython.Runtime;
 using IronPython.Modules;
+using IronPython.Runtime;
+using IronPython.Runtime.Operations;
+using IronPython.Runtime.Types;
 using Microsoft.Scripting;
-using Domo.Misc.Debug;
+using Microsoft.Scripting.Hosting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using PythonEngine = Microsoft.Scripting.Hosting.ScriptEngine;
 
 namespace Domo.Scripting
 {
@@ -38,6 +38,48 @@ namespace Domo.Scripting
         public IEnumerable<KeyValuePair<string, dynamic>> GetVariables()
         {
             return scope.GetItems();
+        }
+
+        public IEnumerable<PythonType> GetTypes<T>()
+        {
+            return GetTypes(typeof(T));
+        }
+
+        public IEnumerable<PythonType> GetTypes(Type t)
+        {
+            List<PythonType> types = new List<PythonType>();
+
+            foreach (var item in GetTypes())
+            {
+                if (PythonOps.IsSubClass(item, DynamicHelpers.GetPythonTypeFromType(t)))
+                {
+                    types.Add(item);
+                }
+            }
+
+            return types;
+        }
+
+        public IEnumerable<PythonType> GetTypes()
+        {
+            List<PythonType> types = new List<PythonType>();
+
+            foreach (var item in scope.GetItems())
+            {
+                if (item.Value is PythonType)
+                {
+                    PythonType type = item.Value;
+
+                    Type t = ClrModule.GetClrType(type);
+
+                    if (!t.IsAbstract)
+                    {
+                        types.Add(type);
+                    }
+                }
+            }
+
+            return types;
         }
 
         public void AddFile(string path)
@@ -73,6 +115,10 @@ namespace Domo.Scripting
             }
             globalScope = e.CreateScope();
             globalScope.SetVariable("Print", new Action<string>(Log.Info));
+
+            PythonType log = DynamicHelpers.GetPythonTypeFromType(typeof(Log));
+            globalScope.SetVariable("log", log);
+            globalScope.SetVariable("Log", log);
 
             ScriptScope builtinScope = Python.GetBuiltinModule(e);
             //builtinScope.SetVariable("__import__", new Func<CodeContext, string, PythonDictionary, PythonDictionary, PythonTuple, object>(ImportModule));
