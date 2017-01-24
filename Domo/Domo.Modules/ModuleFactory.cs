@@ -1,4 +1,8 @@
 ﻿using Domo.Misc.Debug;
+using IronPython.Runtime;
+using IronPython.Runtime.Operations;
+using IronPython.Runtime.Types;
+using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -25,6 +29,49 @@ namespace Domo.Modules
                 {
                     ModuleBase module = (ModuleBase)Activator.CreateInstance(item);
                     modules.Add(item, module);
+                }
+            }
+
+            foreach (var item in modules)
+            {
+                FixReferences(item.Value);
+            }
+
+            // All the references should be assigned before going into the OnEnable
+            foreach (var item in modules)
+            {
+                item.Value.OnEnable();
+            }
+        }
+
+        /// <summary>
+        /// Load all the modules from a script scope
+        /// </summary>
+        /// <param name="scope">Scope to get modules from</param>
+        /// <exception cref="ArgumentException">Gets thrown when the type is already loaded</exception>
+        public void LoadModules(IEnumerable<ScriptScope> scopes)
+        {
+            foreach (var scope in scopes)
+            {
+                foreach (var item in scope.GetItems())
+                {
+                    if (item.Value is PythonType)
+                    {
+                        PythonType type = item.Value;
+
+                        if (PythonOps.IsSubClass(type, DynamicHelpers.GetPythonTypeFromType(typeof(ModuleBase))))
+                        {
+                            Type t = ClrModule.GetClrType(type);
+
+                            if (!t.IsAbstract)
+                            {
+                                modules.Add(
+                                    ClrModule.GetClrType(type),
+                                    scope.Engine.Operations.CreateInstance(type) as ModuleBase
+                                    );
+                            }
+                        }
+                    }
                 }
             }
 

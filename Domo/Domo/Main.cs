@@ -14,7 +14,7 @@ namespace Domo
             pm.LoadPackages();
 
             ModuleManager.Init();
-            ModuleManager.LoadAllModules();
+            ModuleManager.LoadAllModules(pm.packages);
         }
 
         public static void ShutDown()

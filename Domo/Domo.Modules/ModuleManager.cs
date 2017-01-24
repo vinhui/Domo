@@ -1,7 +1,8 @@
 ﻿using Domo.Misc.Debug;
-using System;
+using Domo.Packaging;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
+using System.Linq;
 
 namespace Domo.Modules
 {
@@ -24,35 +25,17 @@ namespace Domo.Modules
         }
 
         /// <summary>
-        /// Load all the modules in the current appdomain
+        /// Load all the modules
         /// </summary>
-        public static void LoadAllModules()
+        public static void LoadAllModules(IEnumerable<Package> packages)
         {
             Log.Info("Loading all assemblies in the current app domain");
             Stopwatch s = Stopwatch.StartNew();
 
-            foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                LoadModules(item);
-            }
+            factory.LoadModules(packages.Select(x => x.engine.scope));
 
             s.Stop();
             Log.Info("Finished loading all assemblies in {0}ms", s.ElapsedMilliseconds);
-        }
-
-        /// <summary>
-        /// Load modules from a single assembly
-        /// </summary>
-        /// <param name="assembly">Assembly to load modules from</param>
-        public static void LoadModules(Assembly assembly)
-        {
-            Log.Info("Loading all modules from assembly {0}", assembly.GetName().Name);
-            Stopwatch s = Stopwatch.StartNew();
-
-            factory.LoadModules(assembly);
-
-            s.Stop();
-            Log.Debug("Loading modules from assembly {0} took {1}ms", assembly.GetName().Name, s.ElapsedMilliseconds);
         }
 
         /// <summary>
