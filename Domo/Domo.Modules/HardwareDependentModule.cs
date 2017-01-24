@@ -12,7 +12,7 @@ namespace Domo.Modules
         /// Access to the hardware interface
         /// </summary>
         [AutoFillGeneric]
-        public T hardwareInterface { get; private set; }
+        public readonly T hardwareInterface;
 
         /// <summary>
         /// Send data to the hardware

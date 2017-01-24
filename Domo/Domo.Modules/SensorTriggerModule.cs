@@ -13,7 +13,7 @@
         /// Access the controller
         /// </summary>
         [AutoFillGeneric]
-        public U controller { get; private set; }
+        public readonly U controller;
     }
 
     /// <summary>
@@ -33,7 +33,7 @@
         /// Access to the sensor
         /// </summary>
         [AutoFillGeneric]
-        public T sensor { get; private set; }
+        public readonly T sensor;
 
         /// <summary>
         /// Gets called when it triggers

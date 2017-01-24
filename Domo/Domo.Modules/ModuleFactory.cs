@@ -111,34 +111,39 @@ namespace Domo.Modules
         private void FixReferences(ModuleBase module)
         {
             Type type = module.GetType();
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            FieldInfo[] properties = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
 
             foreach (var item in properties)
             {
                 if (item.IsDefined(typeof(AutoFillGenericAttribute), true))
                 {
-                    // Make sure there is something to assign the property with
-                    Type parentType = item.DeclaringType;
-                    if (parentType.ContainsGenericParameters)
+                    Type ownerType = item.DeclaringType;
+                    if (true)
                     {
-                        Type propType = item.PropertyType;
-
-                        // Bool that gets set when the property is sucessfully set, this is for logging purposes
-                        bool set = false;
-                        foreach (var generic in parentType.GenericTypeArguments)
+                        // Make sure there is something to assign the property with
+                        if (ownerType.GenericTypeArguments.Length > 0)
                         {
-                            if (generic == propType)
+                            Type propType = item.FieldType;
+
+                            // Bool that gets set when the property is sucessfully set, this is for logging purposes
+                            bool set = false;
+                            foreach (var generic in ownerType.GenericTypeArguments)
                             {
-                                item.SetValue(module, GetInstance(propType));
-                                set = true;
-                                break;
+                                if (generic == propType)
+                                {
+                                    item.SetValue(module, GetInstance(propType));
+                                    set = true;
+                                    break;
+                                }
                             }
+                            if (!set)
+                                Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not of the same type as one of the class generics", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
                         }
-                        if (!set)
-                            Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not of the same type as one of the class generics", item.Name, parentType.FullName, typeof(AutoFillGenericAttribute).Name);
+                        else
+                            Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not in a generic class!", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
                     }
                     else
-                        Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not in a generic class!", item.Name, parentType.FullName, typeof(AutoFillGenericAttribute).Name);
+                        Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but does not have a setter!", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
                 }
             }
         }
