@@ -12,8 +12,8 @@ namespace Domo.Modules
     {
         public ControllerModule()
         {
-            if (hardwareInterface.isReadOnly)
-                throw new NotSupportedException("This hardware interface is read only");
+            if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Write))
+                throw new NotSupportedException("This hardware interface can not be controlled");
         }
     }
 }

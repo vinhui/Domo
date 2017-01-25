@@ -1,23 +1,24 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Domo.Modules
 {
     public abstract class HardwareInterfaceModule : ModuleBase
     {
         /// <summary>
-        /// Is this hardware interface read only
+        /// Read/write mode of this hardware interface
         /// </summary>
-        public abstract bool isReadOnly { get; protected set; }
+        public virtual ReadWriteMode readWriteMode { get; protected set; } = ReadWriteMode.Both;
 
         /// <summary>
         /// Is this interface initialized yet
         /// </summary>
-        public abstract bool isInitialized { get; protected set; }
+        public virtual bool isInitialized { get; protected set; }
 
         /// <summary>
         /// Is there data available to read
         /// </summary>
-        public abstract bool hasDataAvailable { get; protected set; }
+        public virtual bool hasDataAvailable { get; protected set; }
 
         /// <summary>
         /// Send data to the hardware
@@ -25,6 +26,9 @@ namespace Domo.Modules
         /// <param name="data">Data to send</param>
         public virtual void SendData(IRawDataObject data)
         {
+            if(!readWriteMode.HasFlag(ReadWriteMode.Write))
+                throw new InvalidOperationException("Cannot send data to an hardware interface that isn't writable");
+
             using (MemoryStream memStream = new MemoryStream())
             using (BinaryWriter writer = new BinaryWriter(memStream))
             {
@@ -47,11 +51,8 @@ namespace Domo.Modules
         /// <returns>Returns success</returns>
         public virtual bool ReadData<T>(out T obj) where T : IRawDataObject, new()
         {
-            if (isReadOnly)
-            {
-                obj = default(T);
-                return false;
-            }
+            if (!readWriteMode.HasFlag(ReadWriteMode.Read))
+                throw new InvalidOperationException("Cannot read data from an hardware interface that isn't readable");
 
             byte[] bytes;
 
