@@ -15,7 +15,7 @@ namespace Domo.Modules
     /// <summary>
     /// Base class for modules that want to control things
     /// </summary>
-    public abstract class ControllerModule : IControllerModule
+    public abstract class ControllerModule : ModuleBase, IControllerModule
     {
 
     }
