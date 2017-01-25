@@ -1,5 +1,6 @@
 ﻿using Domo.Misc.Debug;
 using IronPython.Runtime;
+using IronPython.Runtime.Operations;
 using IronPython.Runtime.Types;
 using System;
 using System.Collections.Generic;
@@ -12,35 +13,7 @@ namespace Domo.Modules
     /// </summary>
     public class ModuleFactory : IDisposable
     {
-        private Dictionary<Type, ModuleBase> modules = new Dictionary<Type, ModuleBase>();
-
-        /// <summary>
-        /// Load all the modules from an assembly
-        /// </summary>
-        /// <param name="assembly">Assembly to load the modules from</param>
-        /// <exception cref="ArgumentException">Gets thrown when the type is already loaded</exception>
-        public void LoadModules(Assembly assembly)
-        {
-            foreach (var item in assembly.GetTypes())
-            {
-                if (CheckType(item, false))
-                {
-                    ModuleBase module = (ModuleBase)Activator.CreateInstance(item);
-                    modules.Add(item, module);
-                }
-            }
-
-            foreach (var item in modules)
-            {
-                FixReferences(item.Value);
-            }
-
-            // All the references should be assigned before going into the OnEnable
-            foreach (var item in modules)
-            {
-                item.Value.OnEnable();
-            }
-        }
+        private Dictionary<PythonType, ModuleBase> modules = new Dictionary<PythonType, ModuleBase>();
 
         /// <summary>
         /// Load all the modules from a script scope
@@ -57,7 +30,7 @@ namespace Domo.Modules
                 {
                     Log.Debug("Found module '{0}'", PythonType.Get__name__(type));
                     modules.Add(
-                        ClrModule.GetClrType(type),
+                        type,
                         engine.engine.Operations.CreateInstance(type) as ModuleBase
                         );
                 }
@@ -96,12 +69,13 @@ namespace Domo.Modules
         /// <returns>Returns the instance</returns>
         public ModuleBase GetInstance(Type t)
         {
-            CheckType(t);
+            foreach (var item in modules)
+            {
+                if (item.Key.__clrtype__() == t)
+                    return item.Value;
+            }
 
-            if (modules.ContainsKey(t))
-                return modules[t];
-            else
-                throw new KeyNotFoundException("The module you're trying to get an instance of has not been loaded");
+            throw new KeyNotFoundException("The module you're trying to get an instance of has not been loaded");
         }
 
         /// <summary>
