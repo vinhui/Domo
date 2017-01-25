@@ -21,6 +21,9 @@ namespace Domo.Modules
         /// <param name="data">Data to send</param>
         public virtual void SendData(IRawDataObject data)
         {
+            if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Write))
+                throw new NotSupportedException("This hardware interface cannot be written to");
+
             if (hardwareInterface.isInitialized)
                 hardwareInterface.SendData(data);
             else
@@ -34,6 +37,9 @@ namespace Domo.Modules
         /// <param name="data">Data to send</param>
         public virtual void SendData(byte[] data)
         {
+            if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Write))
+                throw new NotSupportedException("This hardware interface cannot be written to");
+
             if (hardwareInterface.isInitialized)
                 hardwareInterface.SendData(data);
             else
@@ -49,8 +55,8 @@ namespace Domo.Modules
         /// <returns>Returns success</returns>
         public virtual bool ReadData<U>(out U data) where U : IRawDataObject, new()
         {
-            if (hardwareInterface.isReadOnly)
-                throw new NotSupportedException("This hardware interface is read only");
+            if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Read))
+                throw new NotSupportedException("This hardware interface cannot be read from");
 
             if (hardwareInterface.hasDataAvailable)
                 return hardwareInterface.ReadData(out data);
@@ -67,8 +73,8 @@ namespace Domo.Modules
         /// <returns>Returns success</returns>
         public virtual bool ReadData(out byte[] data)
         {
-            if (hardwareInterface.isReadOnly)
-                throw new NotSupportedException("This hardware interface is read only");
+            if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Read))
+                throw new NotSupportedException("This hardware interface cannot be read from");
 
             if (hardwareInterface.hasDataAvailable)
                 return hardwareInterface.ReadData(out data);
