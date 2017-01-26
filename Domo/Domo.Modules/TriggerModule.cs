@@ -64,7 +64,7 @@
         /// </summary>
         public virtual void OnTrigger()
         {
-            onTrigger.Invoke();
+            onTrigger?.Invoke();
         }
     }
 }
