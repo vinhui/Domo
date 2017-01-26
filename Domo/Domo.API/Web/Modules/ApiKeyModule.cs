@@ -3,7 +3,6 @@ using Domo.Serialization;
 using Nancy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Domo.API.Web.Modules
 {

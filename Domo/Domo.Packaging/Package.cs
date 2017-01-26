@@ -1,9 +1,5 @@
 ﻿using Domo.Scripting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domo.Packaging
 {
@@ -21,6 +17,7 @@ namespace Domo.Packaging
             this.path = path;
             this.engine = engine;
         }
+
         public Package(PackageManifest manifest, string path, ScriptEngine engine)
         {
             this.manifest = manifest;

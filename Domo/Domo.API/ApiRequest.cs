@@ -12,6 +12,7 @@ namespace Domo.API
         /// The key the request is for
         /// </summary>
         public string key;
+
         /// <summary>
         /// Arguments from the request
         /// </summary>

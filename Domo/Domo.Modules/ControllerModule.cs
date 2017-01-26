@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domo.Modules
+﻿namespace Domo.Modules
 {
     /// <summary>
     /// Base class for modules that want to control hardware
@@ -9,7 +7,6 @@ namespace Domo.Modules
     public abstract class ControllerModule<T> : HardwareDependentModule<T>, IControllerModule
         where T : HardwareInterfaceModule
     {
-
     }
 
     /// <summary>
@@ -17,6 +14,5 @@ namespace Domo.Modules
     /// </summary>
     public abstract class ControllerModule : ModuleBase, IControllerModule
     {
-
     }
 }

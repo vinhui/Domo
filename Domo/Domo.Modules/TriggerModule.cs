@@ -28,7 +28,7 @@
     /// Base class for things that need to happen based off of sensors
     /// </summary>
     /// <typeparam name="T">Sensor that it is depending on</typeparam>
-    public abstract class SensorTriggerModule<T> : TriggerModule 
+    public abstract class SensorTriggerModule<T> : TriggerModule
         where T : ISensorModule
     {
         /// <summary>
@@ -42,7 +42,7 @@
     /// Base class for things that need to happen
     /// </summary>
     /// <typeparam name="T">Controller that it is depending on</typeparam>
-    public abstract class ControllerTriggerModule<T> : TriggerModule 
+    public abstract class ControllerTriggerModule<T> : TriggerModule
         where T : IControllerModule
     {
         /// <summary>

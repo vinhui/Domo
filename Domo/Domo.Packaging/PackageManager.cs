@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Domo.Misc;
-using Domo.Serialization;
+﻿using Domo.Misc;
 using Domo.Misc.Debug;
 using Domo.Scripting;
+using Domo.Serialization;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Domo.Packaging
 {
     public class PackageManager
     {
         public List<Package> packages = new List<Package>();
-        string packagePath;
-        string manifestName;
-        string scriptExtension;
+        private string packagePath;
+        private string manifestName;
+        private string scriptExtension;
 
         public PackageManager()
         {

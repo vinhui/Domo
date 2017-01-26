@@ -11,9 +11,11 @@ namespace Domo.Misc.Debug
                 case LogType.Warning:
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
+
                 case LogType.Error:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
+
                 default:
                     Console.ResetColor();
                     break;

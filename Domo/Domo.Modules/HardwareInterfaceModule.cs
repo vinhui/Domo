@@ -26,7 +26,7 @@ namespace Domo.Modules
         /// <param name="data">Data to send</param>
         public virtual void SendData(IRawDataObject data)
         {
-            if(!readWriteMode.HasFlag(ReadWriteMode.Write))
+            if (!readWriteMode.HasFlag(ReadWriteMode.Write))
                 throw new InvalidOperationException("Cannot send data to an hardware interface that isn't writable");
 
             using (MemoryStream memStream = new MemoryStream())

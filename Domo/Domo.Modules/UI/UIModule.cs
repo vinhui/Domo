@@ -10,16 +10,19 @@ namespace Domo.Modules.UI
     {
         // TODO: All the modules probably shouldn't be kept in here
         private static List<UIModule> modules = new List<UIModule>();
+
         private static List<IUIModule> moduleInterfaces = new List<IUIModule>();
 
         public static void RegisterModule(UIModule module)
         {
             modules.Add(module);
         }
+
         public static void RegisterModule(IUIModule module)
         {
             moduleInterfaces.Add(module);
         }
+
         public static IEnumerable<UIModule> GetModules()
         {
             List<UIModule> m = new List<UIModule>(modules.Count + moduleInterfaces.Count);

@@ -1,5 +1,4 @@
-﻿using Domo.API;
-using System;
+﻿using System;
 
 namespace Domo.ConsoleApp
 {
@@ -11,7 +10,6 @@ namespace Domo.ConsoleApp
         {
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             Domo.Main.Init();
-
 
             Console.ReadKey();
             isShuttingDown = true;

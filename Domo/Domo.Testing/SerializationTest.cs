@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Domo.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Domo.Serialization;
+using System;
 
 namespace Domo.Testing
 {
@@ -15,7 +15,7 @@ namespace Domo.Testing
                 name = "test",
                 value = 313
             };
-            
+
             string json = Serializer.instance.Serialize(test);
             Console.WriteLine(json);
             Assert.AreEqual(test, Serializer.instance.Deserialize<TestObject>(json));
