@@ -8,7 +8,7 @@ namespace Domo
     {
         public static void Init()
         {
-            //ApiManager.Init();
+            ApiManager.Init();
 
             PackageManager pm = new PackageManager();
             pm.LoadPackages();
