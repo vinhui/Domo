@@ -14,12 +14,40 @@ class ArduinoLightsController(ControllerModule[ArduinoInterface]):
 		pass
 
 	def setColor(self, startLed, endLed, r, g, b):
-		bytes = []
-		bytes.append(startLed)
-		bytes.append(endLed)
-		bytes.append(r)
-		bytes.append(g)
-		bytes.append(b)
+		self.SendData(ArduinoData(startLed, endLed, r, g, b))
+		pass
 
-		self.SendData(Array[Byte](bytes))
+class ArduinoData(IRawDataObject):
+	startLed = 0
+	endLed = 0
+	r = 0
+	g = 0
+	b = 0
+
+	outString = None
+
+	def __init__(self):
+		pass
+
+	def __init__(self, start, end, r, g, b):
+		self.startLed = start
+		self.endLed = end
+		self.r = r
+		self.g = g
+		self.b = b
+		pass
+
+	def Read(self, reader):
+		self.outString = reader.ReadString()
+		pass
+
+	def Write(self, writer):
+		bytes = []
+		bytes.append(self.startLed)
+		bytes.append(self.endLed)
+		bytes.append(self.r)
+		bytes.append(self.g)
+		bytes.append(self.b)
+
+		writer.Write(Array[Byte](bytes))
 		pass

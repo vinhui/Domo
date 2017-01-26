@@ -33,7 +33,7 @@ namespace Domo.Modules
             using (BinaryWriter writer = new BinaryWriter(memStream))
             {
                 data.Write(writer);
-                SendData(memStream.ToArray());
+                SendDataRaw(memStream.ToArray());
             }
         }
 
@@ -41,7 +41,7 @@ namespace Domo.Modules
         /// Send data to the hardware
         /// </summary>
         /// <param name="data">Data to send</param>
-        public abstract void SendData(byte[] data);
+        public abstract void SendDataRaw(byte[] data);
 
         /// <summary>
         /// Read data from the hardware
@@ -56,7 +56,7 @@ namespace Domo.Modules
 
             byte[] bytes;
 
-            if (ReadData(out bytes))
+            if (ReadDataRaw(out bytes))
             {
                 using (MemoryStream memStream = new MemoryStream(bytes))
                 using (BinaryReader reader = new BinaryReader(memStream))
@@ -74,6 +74,6 @@ namespace Domo.Modules
         /// </summary>
         /// <param name="data">Object to write the data in to</param>
         /// <returns>Returns success</returns>
-        public abstract bool ReadData(out byte[] data);
+        public abstract bool ReadDataRaw(out byte[] data);
     }
 }

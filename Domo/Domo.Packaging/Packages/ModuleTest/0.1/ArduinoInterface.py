@@ -37,15 +37,18 @@ class ArduinoInterface(HardwareInterfaceModule):
 			self.closeSerial()
 		pass
 
-	def SendData(self, data):
+	def SendDataRaw(self, data):
 		while self.isWriting:
 			continue
+
+		if data is None:
+			Log.Error("Received no data to send")
 
 		if self.serial is not None and self.serial.IsOpen:
 			self.serial.Write(data, 0, len(data))
 		pass
 
-	def ReadData(self, data):
+	def ReadDataRaw(self, data):
 		bufferSize = len(self.readBuffer)
 		
 		data.Value = self.readBuffer

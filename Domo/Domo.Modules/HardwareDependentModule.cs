@@ -35,13 +35,13 @@ namespace Domo.Modules
         /// </summary>
         /// <exception cref="NotInitializedException">Gets thrown when the hardware interface is not yet initialized</exception>
         /// <param name="data">Data to send</param>
-        public virtual void SendData(byte[] data)
+        public virtual void SendDataRaw(byte[] data)
         {
             if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Write))
                 throw new NotSupportedException("This hardware interface cannot be written to");
 
             if (hardwareInterface.isInitialized)
-                hardwareInterface.SendData(data);
+                hardwareInterface.SendDataRaw(data);
             else
                 throw new NotInitializedException("Data cannot be send before the hardware interface is initialized");
         }
@@ -71,13 +71,13 @@ namespace Domo.Modules
         /// <param name="data">Array to write data to</param>
         /// <exception cref="NotSupportedException">Gets thrown when the hardware interface is read only</exception>
         /// <returns>Returns success</returns>
-        public virtual bool ReadData(out byte[] data)
+        public virtual bool ReadDataRaw(out byte[] data)
         {
             if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Read))
                 throw new NotSupportedException("This hardware interface cannot be read from");
 
             if (hardwareInterface.hasDataAvailable)
-                return hardwareInterface.ReadData(out data);
+                return hardwareInterface.ReadDataRaw(out data);
 
             data = null;
             return false;
