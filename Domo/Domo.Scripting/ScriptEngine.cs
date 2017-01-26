@@ -114,7 +114,6 @@ namespace Domo.Scripting
                 e.Runtime.LoadAssembly(item);
             }
             globalScope = e.CreateScope();
-            globalScope.SetVariable("Print", new Action<string>(Log.Info));
 
             PythonType log = DynamicHelpers.GetPythonTypeFromType(typeof(Log));
             globalScope.SetVariable("log", log);
@@ -134,7 +133,6 @@ namespace Domo.Scripting
 
         public void Unload()
         {
-
         }
     }
 }
