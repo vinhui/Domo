@@ -49,7 +49,7 @@ namespace Domo.Modules
         /// <typeparam name="T">Type of object to write the data in to</typeparam>
         /// <param name="obj">Object to write the data in to</param>
         /// <returns>Returns success</returns>
-        public virtual bool ReadData<T>(out T obj) where T : IRawDataObject, new()
+        public virtual bool ReadData<T>(ref T obj) where T : IRawDataObject
         {
             if (!readWriteMode.HasFlag(ReadWriteMode.Read))
                 throw new InvalidOperationException("Cannot read data from an hardware interface that isn't readable");
@@ -61,7 +61,6 @@ namespace Domo.Modules
                 using (MemoryStream memStream = new MemoryStream(bytes))
                 using (BinaryReader reader = new BinaryReader(memStream))
                 {
-                    obj = new T();
                     return obj.Read(reader);
                 }
             }

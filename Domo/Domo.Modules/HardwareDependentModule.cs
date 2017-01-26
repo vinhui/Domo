@@ -53,13 +53,13 @@ namespace Domo.Modules
         /// <param name="data">Object to read data in to</param>
         /// <exception cref="NotSupportedException">Gets thrown when the hardware interface is read only</exception>
         /// <returns>Returns success</returns>
-        public virtual bool ReadData<U>(out U data) where U : IRawDataObject, new()
+        public virtual bool ReadData<U>(ref U data) where U : IRawDataObject
         {
             if (!hardwareInterface.readWriteMode.HasFlag(ReadWriteMode.Read))
                 throw new NotSupportedException("This hardware interface cannot be read from");
 
             if (hardwareInterface.hasDataAvailable)
-                return hardwareInterface.ReadData(out data);
+                return hardwareInterface.ReadData(ref data);
 
             data = default(U);
             return false;
