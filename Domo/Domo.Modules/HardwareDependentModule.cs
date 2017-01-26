@@ -17,6 +17,7 @@ namespace Domo.Modules
         /// <summary>
         /// Send data to the hardware
         /// </summary>
+        /// <exception cref="NotSupportedException">Gets thrown when the interface not be written to</exception>
         /// <exception cref="NotInitializedException">Gets thrown when the hardware interface is not yet initialized</exception>
         /// <param name="data">Data to send</param>
         public virtual void SendData(IRawDataObject data)
@@ -33,6 +34,7 @@ namespace Domo.Modules
         /// <summary>
         /// Send data to the hardware
         /// </summary>
+        /// <exception cref="NotSupportedException">Gets thrown when the interface not be written to</exception>
         /// <exception cref="NotInitializedException">Gets thrown when the hardware interface is not yet initialized</exception>
         /// <param name="data">Data to send</param>
         public virtual void SendDataRaw(byte[] data)
@@ -51,7 +53,7 @@ namespace Domo.Modules
         /// </summary>
         /// <typeparam name="U">Type of object to read data in to</typeparam>
         /// <param name="data">Object to read data in to</param>
-        /// <exception cref="NotSupportedException">Gets thrown when the hardware interface is read only</exception>
+        /// <exception cref="NotSupportedException">Gets thrown when the hardware interface cannot be read from</exception>
         /// <returns>Returns success</returns>
         public virtual bool ReadData<U>(ref U data) where U : IRawDataObject
         {
@@ -69,7 +71,7 @@ namespace Domo.Modules
         /// Read data from the hardware
         /// </summary>
         /// <param name="data">Array to write data to</param>
-        /// <exception cref="NotSupportedException">Gets thrown when the hardware interface is read only</exception>
+        /// <exception cref="NotSupportedException">Gets thrown when the hardware interface cannot be read from</exception>
         /// <returns>Returns success</returns>
         public virtual bool ReadDataRaw(out byte[] data)
         {
