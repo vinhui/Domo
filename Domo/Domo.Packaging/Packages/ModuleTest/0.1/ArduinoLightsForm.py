@@ -20,11 +20,13 @@ class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 
 	def CreateForm(self):
 		self.form = TestForm()
-		self.form.buttonClickedEvent += self.clicked
+		self.form.buttonClickedEvent += lambda *a : self.OnTrigger()
 		Application.Run(self.form)
 		pass
 
-	def clicked(self, *args):
+	def OnTrigger(self):
+		super(ArduinoLightsForm, self).OnTrigger()
+
 		self.controller.setColor(self.currIndex, self.currIndex, 255, 255, 255)
 		self.currIndex += 1
 
