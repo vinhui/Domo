@@ -14,7 +14,7 @@ class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 		pass
 	
 	def OnDisable(self):
-		if self.form is not None:
+		if self.form is not None and self.form.Visible:
 			self.form.Invoke(MethodInvoker(self.form.Close))
 
 		if self.formThread is not None:
