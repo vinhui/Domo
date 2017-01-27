@@ -2,7 +2,7 @@
 
 from System.Drawing import Point
 from System.Threading import Thread, ThreadStart
-from System.Windows.Forms import Application, Form, Button
+from System.Windows.Forms import Application, Form, Button, MethodInvoker
 
 class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 	currIndex = 0
@@ -14,6 +14,9 @@ class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 		pass
 	
 	def OnDisable(self):
+		if self.form is not None:
+			self.form.Invoke(MethodInvoker(self.form.Close))
+
 		if self.formThread is not None:
 			self.formThread.Abort()
 		pass
