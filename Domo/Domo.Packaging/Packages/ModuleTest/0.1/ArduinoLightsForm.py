@@ -5,6 +5,7 @@ from System.Threading import Thread, ThreadStart
 from System.Windows.Forms import Application, Form, Button, MethodInvoker
 
 class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
+	form = None
 	currIndex = 0
 
 	def OnEnable(self):
@@ -19,6 +20,8 @@ class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 
 		if self.formThread is not None:
 			self.formThread.Abort()
+
+		self.form = None
 		pass
 
 	def CreateForm(self):
