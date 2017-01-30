@@ -1,15 +1,13 @@
 ﻿from Domo.Modules import *
 
 from System.Net import WebClient, WebException, HttpStatusCode
+from System.Threading import Thread
 
 import json
 import random
 import string
 
 class SpotifyInterface(HardwareInterfaceModule):
-	webClient = WebClient()
-	webClient.Headers.Add("Origin", "https://open.spotify.com")
-
 	oauthTokenURL = "http://open.spotify.com/token"
 	csrfToken = None
 	oauthToken = None
@@ -36,8 +34,7 @@ class SpotifyInterface(HardwareInterfaceModule):
 
 	def OnEnable(self):
 		Log.Info("Initializing spotify interface")
-		#self.spotifyPort = self.findPort(self.spotifyPortSearchStart,
-		#self.spotifyPortSearchEnd)
+		self.spotifyPort = self.findPort(self.spotifyPortSearchStart, self.spotifyPortSearchEnd)
 		self.getOauthToken()
 		self.getCsrfToken()
 		Log.Info("Spotify interface is initialized")
@@ -48,7 +45,7 @@ class SpotifyInterface(HardwareInterfaceModule):
 		pass
 
 	def getOauthToken(self):
-		response = self.webClient.DownloadString(self.oauthTokenURL)
+		response = self.newWebClient().DownloadString(self.oauthTokenURL)
 		j = json.loads(response)
 		self.oauthToken = j["t"]
 
@@ -57,7 +54,7 @@ class SpotifyInterface(HardwareInterfaceModule):
 
 	def getCsrfToken(self):
 		url = self.spotifyHostUrl + self.spotifyCsrfTokenPath
-		response = self.webClient.DownloadString(url)
+		response = self.newWebClient().DownloadString(url)
 		j = json.loads(response)
 		self.csrfToken = j["token"]
 
@@ -67,7 +64,7 @@ class SpotifyInterface(HardwareInterfaceModule):
 	def findPort(self, start, end):
 		for i in range(start, end + 1):
 			try:
-				response = self.webClient.DownloadString(self.spotifyHostUrlNoPort + ":" + str(i))
+				response = self.newWebClient().DownloadString(self.spotifyHostUrlNoPort + ":" + str(i))
 				Log.Debug("Local spotify server is running on port {0}".format(i))
 				return i
 			except WebException as e:
@@ -81,9 +78,23 @@ class SpotifyInterface(HardwareInterfaceModule):
 		Log.Warning("Failed to get the port on which the local spotify server is running!")
 		pass
 
-	def get(self, path):
-		passownloadString(self.spotifyHostUrl + path + "?csrf={0}&oauth={1}".format(self.csrfToken, self.oauthToken))
+	def get(self, path, options=None):
+		optionsString = "&"
+
+		if options is not None:
+			optionsString = "&" + optionsString.join("=".join(a) for a in options.items())
+
+		url = self.spotifyHostUrl + path + "?csrf={0}&oauth={1}{2}".format(self.csrfToken, self.oauthToken, optionsString)
+		Log.Debug("Sending request to local spotify: {0}".format(url))
+
+		response = self.newWebClient().DownloadString(url)
 		j = json.loads(response)
 
 		return j
+		pass
+
+	def newWebClient(self):
+		webClient = WebClient()
+		webClient.Headers.Add("Origin", "https://open.spotify.com")
+		return webClient
 		pass

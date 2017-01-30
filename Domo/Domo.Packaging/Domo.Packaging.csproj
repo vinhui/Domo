@@ -124,6 +124,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyZZForm.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifySensor.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
