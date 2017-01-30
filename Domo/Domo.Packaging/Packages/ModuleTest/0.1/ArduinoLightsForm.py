@@ -1,12 +1,21 @@
 ﻿from Domo.Modules import *
 
-from System.Drawing import Point
+from System.Drawing import Point, Color, Size, Brush, SolidBrush 
 from System.Threading import Thread, ThreadStart
-from System.Windows.Forms import Application, Form, Button, MethodInvoker
+from System.Windows.Forms import (
+	Application, 
+	Form, 
+	DialogResult,
+	MethodInvoker,
+	Label, 
+	Button, 
+	NumericUpDown, 
+	ColorDialog,
+	TrackBar,
+	)
 
 class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 	form = None
-	currIndex = 0
 
 	def OnEnable(self):
 		self.formThread = None
@@ -25,36 +34,86 @@ class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
 		pass
 
 	def CreateForm(self):
-		self.form = TestForm()
-		self.form.buttonClickedEvent += lambda *a : self.OnTrigger()
+		self.form = TestForm(self.OnTrigger)
 		Application.Run(self.form)
 		pass
 
 	def OnTrigger(self):
 		super(ArduinoLightsForm, self).OnTrigger()
 
-		self.controller.setColor(self.currIndex, self.currIndex, 255, 255, 255)
-		self.currIndex += 1
-
-		if self.currIndex > 30:
-			self.currIndex = 0
-			self.controller.setColor(0, 255, 0, 0, 0)
+		if self.form is not None:
+			self.controller.setColor(self.form.startLedID.Value, self.form.endLedID.Value, self.form.colorVals[0], self.form.colorVals[1], self.form.colorVals[2])
 		pass
 
 class TestForm(Form):
-	def __init__(self):
-		self.Text = "Test"
+	colorVals = [255] * 3
+	callback = None
+
+	def __init__(self, callback):
+		self.Text = "Light Controls"
 		self.Name = "Test"
+
+		self.callback = callback
 
 		self.createControls()
 		pass
 
 	def createControls(self):
-		self.button = Button()
-		self.button.Text = "Test"
-		self.button.Location = Point(25, 25)
+		label = Label()
+		label.Text = "Start Led: "
+		label.Location = Point(10, 25)
+		self.Controls.Add(label)
 
-		self.buttonClickedEvent = self.button.Click
+		self.startLedID = NumericUpDown()
+		self.startLedID.Value = 0
+		self.startLedID.Location = Point(110, 25)
+		self.Controls.Add(self.startLedID)
 
-		self.Controls.Add(self.button)
+		label = Label()
+		label.Text = "End Led: "
+		label.Location = Point(10, 50)
+		self.Controls.Add(label)
+
+		self.endLedID = NumericUpDown()
+		self.endLedID.Value = 30
+		self.endLedID.Location = Point(110, 50)
+		self.Controls.Add(self.endLedID)
+
+		self.drawColorSliders()
+		if self.callback is not None:
+			self.callback()
+		pass
+
+	def drawColorSliders(self):
+		startX = 10
+		startY = 75
+		offset = 10
+		width = 100
+		height = 25
+
+		self.bars = [TrackBar(), TrackBar(), TrackBar()]
+
+		for i, b in enumerate(self.bars):
+			if i is 0:
+				b.BackgroundColorColor = Color.Red
+			if i is 1:
+				b.BackgroundColorColor = Color.Blue
+			if i is 2:
+				b.BackgroundColorColor = Color.Green
+
+			b.Size = Size(width, height)
+			b.Location = Point(startX, startY + (i * (offset + height)))
+			b.Minimum = 0
+			b.Maximum = 255
+			b.TickFrequency = 1
+			b.Value = self.colorVals[i]
+			b.Scroll += self.onSliderChanged
+
+			self.Controls.Add(b)
+		pass
+
+	def onSliderChanged(self, sender, args):
+		self.colorVals[self.bars.index(sender)] = sender.Value
+		if self.callback is not None:
+			self.callback()
 		pass

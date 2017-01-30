@@ -49,5 +49,6 @@ class ArduinoData(IRawDataObject):
 		bytes.append(self.g)
 		bytes.append(self.b)
 
-		writer.Write(Array[Byte](bytes))
+		a = Array[Byte](bytes)
+		writer.Write(a)
 		pass
