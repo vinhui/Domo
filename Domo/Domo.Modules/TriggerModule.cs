@@ -1,55 +1,23 @@
-﻿namespace Domo.Modules
+﻿using IronPython.Runtime.Types;
+
+namespace Domo.Modules
 {
     public delegate void TriggerEvent();
 
-    /// <summary>
-    /// Base class for things that need to happen based off of sensors
-    /// </summary>
-    /// <typeparam name="T">Sensor that it is depending on</typeparam>
-    /// <typeparam name="U">Controller that it is depending on</typeparam>
-    public abstract class TriggerModule<T, U> : TriggerModule
-        where T : ISensorModule
-        where U : IControllerModule
+    public abstract class SensorTriggerModule : TriggerModule
     {
-        /// <summary>
-        /// Access to the sensor
-        /// </summary>
-        [AutoFillGeneric]
-        public readonly T sensor;
-
-        /// <summary>
-        /// Access the controller
-        /// </summary>
-        [AutoFillGeneric]
-        public readonly U controller;
+        public void init(PythonType sensorModule)
+        {
+            base.init(sensorModule, null);
+        }
     }
 
-    /// <summary>
-    /// Base class for things that need to happen based off of sensors
-    /// </summary>
-    /// <typeparam name="T">Sensor that it is depending on</typeparam>
-    public abstract class SensorTriggerModule<T> : TriggerModule
-        where T : ISensorModule
+    public abstract class ControllerTriggerModule : TriggerModule
     {
-        /// <summary>
-        /// Access to the sensor
-        /// </summary>
-        [AutoFillGeneric]
-        public readonly T sensor;
-    }
-
-    /// <summary>
-    /// Base class for things that need to happen
-    /// </summary>
-    /// <typeparam name="T">Controller that it is depending on</typeparam>
-    public abstract class ControllerTriggerModule<T> : TriggerModule
-        where T : IControllerModule
-    {
-        /// <summary>
-        /// Access to the controller
-        /// </summary>
-        [AutoFillGeneric]
-        public readonly T controller;
+        public void init(PythonType controllerModule)
+        {
+            base.init(null, controllerModule);
+        }
     }
 
     /// <summary>
@@ -57,7 +25,27 @@
     /// </summary>
     public abstract class TriggerModule : ModuleBase
     {
+        /// <summary>
+        /// Access to the sensor
+        /// </summary>
+        public SensorModule sensor { get; private set; }
+
+        /// <summary>
+        /// Access the controller
+        /// </summary>
+        public ControllerModule controller { get; private set; }
+
         public event TriggerEvent onTrigger;
+
+        public virtual void init(PythonType sensorModule, PythonType controllerModule)
+        {
+            if (sensorModule != null)
+                sensor = GetModuleReference<SensorModule>(sensorModule);
+            if (controllerModule != null)
+                controller = GetModuleReference<ControllerModule>(controllerModule);
+        }
+
+        public TriggerModule() { }
 
         /// <summary>
         /// Gets called when it triggers

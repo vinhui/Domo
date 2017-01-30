@@ -74,12 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerModule.cs" />
-    <Compile Include="AutoFillGenericAttribute.cs" />
     <Compile Include="HardwareInterfaceModule.cs" />
     <Compile Include="HardwareDependentModule.cs" />
-    <Compile Include="IControllerModule.cs" />
     <Compile Include="IRawDataObject.cs" />
-    <Compile Include="ISensorModule.cs" />
     <Compile Include="ModuleBase.cs" />
     <Compile Include="ModuleFactory.cs" />
     <Compile Include="ModuleManager.cs" />

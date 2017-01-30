@@ -1,5 +1,6 @@
 ﻿using Domo.Misc.Debug;
 using Domo.Packaging;
+using IronPython.Runtime.Types;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -43,9 +44,9 @@ namespace Domo.Modules
         /// </summary>
         /// <typeparam name="T">Type to get a reference of</typeparam>
         /// <returns>Returns an instance</returns>
-        public static T GetModuleReference<T>() where T : ModuleBase
+        public static ModuleBase GetModuleReference(PythonType type)
         {
-            return factory.GetInstance<T>();
+            return factory.GetInstance(type);
         }
 
         /// <summary>

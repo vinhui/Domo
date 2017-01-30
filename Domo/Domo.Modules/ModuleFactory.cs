@@ -34,11 +34,6 @@ namespace Domo.Modules
                 }
             }
 
-            foreach (var item in modules)
-            {
-                FixReferences(item.Value);
-            }
-
             Log.Info("Found a total of {0} modules", modules.Count);
 
             // All the references should be assigned before going into the OnEnable
@@ -53,71 +48,17 @@ namespace Domo.Modules
         /// <summary>
         /// Get an instance of a module
         /// </summary>
-        /// <typeparam name="T">Type of module to get an instance from</typeparam>
-        /// <returns>Returns the instance</returns>
-        public T GetInstance<T>() where T : ModuleBase
-        {
-            return (T)GetInstance(typeof(T));
-        }
-
-        /// <summary>
-        /// Get an instance of a module
-        /// </summary>
         /// <param name="t">Type of module to get an instance from</param>
         /// <returns>Returns the instance</returns>
-        public ModuleBase GetInstance(Type t)
+        public ModuleBase GetInstance(PythonType t)
         {
             foreach (var item in modules)
             {
-                if (item.Key.__clrtype__() == t)
+                if (item.Key == t)
                     return item.Value;
             }
 
             throw new KeyNotFoundException("The module you're trying to get an instance of has not been loaded");
-        }
-
-        /// <summary>
-        /// Goes through all the properties in the module and fixes all the properties with the <see cref="AutoFillGenericAttribute"/> attribute
-        /// </summary>
-        /// <param name="module">Module to fix the references for</param>
-        private void FixReferences(ModuleBase module)
-        {
-            Type type = module.GetType();
-            FieldInfo[] properties = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-
-            foreach (var item in properties)
-            {
-                if (item.IsDefined(typeof(AutoFillGenericAttribute), true))
-                {
-                    Type ownerType = item.DeclaringType;
-                    if (true)
-                    {
-                        // Make sure there is something to assign the property with
-                        if (ownerType.GenericTypeArguments.Length > 0)
-                        {
-                            Type propType = item.FieldType;
-
-                            // Bool that gets set when the property is sucessfully set, this is for logging purposes
-                            bool set = false;
-                            foreach (var generic in ownerType.GenericTypeArguments)
-                            {
-                                if (generic == propType)
-                                {
-                                    item.SetValue(module, GetInstance(propType));
-                                    set = true;
-                                    break;
-                                }
-                            }
-                            if (!set)
-                                Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not of the same type as one of the class generics", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
-                        }
-                        else
-                            Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but is not in a generic class!", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
-                    }
-                    else
-                        Log.Warning("Property '{0}' in '{1}' has the '{2}' attribute but does not have a setter!", item.Name, ownerType.Name, typeof(AutoFillGenericAttribute).Name);
-                }
-            }
         }
 
         private bool CheckType(Type t, bool throwException = true)

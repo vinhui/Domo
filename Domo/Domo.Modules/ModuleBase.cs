@@ -1,7 +1,22 @@
-﻿namespace Domo.Modules
+﻿using Domo.Misc.Debug;
+using IronPython.Runtime.Types;
+
+namespace Domo.Modules
 {
     public abstract class ModuleBase
     {
+        public T GetModuleReference<T>(PythonType t) where T : class
+        {
+            ModuleBase reference = ModuleManager.GetModuleReference(t);
+            if (reference is T)
+                return reference as T;
+            else
+            {
+                Log.Error("Failed to fix reference for '{0}'", PythonType.Get__name__(t));
+                return null;
+            }
+        }
+
         /// <summary>
         /// Gets called when the program starts or the module gets enabled
         /// </summary>

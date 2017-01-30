@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IronPython.Runtime.Types;
+using System;
 
 namespace Domo.Modules
 {
@@ -6,13 +7,18 @@ namespace Domo.Modules
     /// Base class for any modules that depend on hardware
     /// </summary>
     /// <typeparam name="T">Hardware interface it depends on</typeparam>
-    public abstract class HardwareDependentModule<T> : ModuleBase where T : HardwareInterfaceModule
+    public abstract class HardwareDependentModule : ModuleBase
     {
         /// <summary>
         /// Access to the hardware interface
         /// </summary>
-        [AutoFillGeneric]
-        public readonly T hardwareInterface;
+        public HardwareInterfaceModule hardwareInterface { get; private set; }
+
+        public virtual void init(PythonType dependency)
+        {
+            if (dependency != null)
+                hardwareInterface = GetModuleReference<HardwareInterfaceModule>(dependency);
+        }
 
         /// <summary>
         /// Send data to the hardware
