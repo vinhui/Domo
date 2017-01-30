@@ -14,8 +14,12 @@ from System.Windows.Forms import (
 	TrackBar,
 	)
 
-class ArduinoLightsForm(ControllerTriggerModule[ArduinoLightsController]):
+class ArduinoLightsForm(ControllerTriggerModule):
 	form = None
+
+	def __init__(self):
+		ControllerTriggerModule.init(self, ArduinoLightsController)
+		pass
 
 	def OnEnable(self):
 		self.formThread = None

@@ -2,7 +2,11 @@
 
 from System import Array, Byte
 
-class ArduinoLightsController(ControllerModule[ArduinoInterface]):
+class ArduinoLightsController(ControllerModule):
+	def __init__(self):
+		ControllerModule.init(self, ArduinoInterface)
+		pass
+
 	def OnEnable(self):
 		pass
 
