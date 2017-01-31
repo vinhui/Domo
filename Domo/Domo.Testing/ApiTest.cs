@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nancy;
 using Nancy.Testing;
+using System.Collections.Generic;
 
 namespace Domo.Testing
 {
@@ -59,7 +60,7 @@ namespace Domo.Testing
             {
                 code = 0,
                 success = true,
-                data = new System.Collections.Generic.Dictionary<string, object>(data.arguments)
+                data = (Dictionary<string, object>)data.arguments
             };
         }
     }
