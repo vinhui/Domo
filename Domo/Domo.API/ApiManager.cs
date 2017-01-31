@@ -70,6 +70,7 @@ namespace Domo.API
         /// </summary>
         /// <param name="key">The key to register a listener for</param>
         /// <param name="listener">The listener that gets called</param>
+        /// <exception cref="InvalidOperationException">Thrown when the key is already registered</exception>
         public static void RegisterListener(string key, Func<ApiRequest, ApiResponse> listener)
         {
             if (!_listeners.ContainsKey(key))
@@ -85,7 +86,7 @@ namespace Domo.API
             }
             else
             {
-                throw new KeyNotFoundException("There is already a listener registered for key '" + key + "'");
+                throw new InvalidOperationException("There is already a listener registered for key '" + key + "'");
             }
         }
 
