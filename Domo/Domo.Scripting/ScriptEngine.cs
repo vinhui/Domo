@@ -84,7 +84,8 @@ namespace Domo.Scripting
 
         public void AddFile(string path)
         {
-            ScriptSource source = engine.CreateScriptSourceFromFile(path, Encoding.Default, Microsoft.Scripting.SourceCodeKind.File);
+            Log.Debug("Loading script '{0}'", path);
+            ScriptSource source = engine.CreateScriptSourceFromFile(path, Encoding.Default, SourceCodeKind.File);
 
             try
             {
@@ -93,8 +94,13 @@ namespace Domo.Scripting
             }
             catch (SyntaxErrorException ex)
             {
-                Log.Error("Failed to load " + Path.GetFileNameWithoutExtension(path) + ", error on line " + ex.Line + " and column " + ex.Column + ": " + ex.Message);
-                Log.Error("Line: '" + source.GetCodeLine(ex.Line) + "'");
+                Log.Error("Failed to load {0}, error on line {1} and column {2}: {3}", Path.GetFileNameWithoutExtension(path), ex.Line, ex.Column, ex.Message);
+                Log.Error("Line: '{0}'", source.GetCodeLine(ex.Line));
+            }
+            catch (IronPython.Runtime.Exceptions.ImportException ex)
+            {
+                Log.Error("Failed to load {0}, there was an error with importing a module", Path.GetFileNameWithoutExtension(path));
+                Log.Exception(ex);
             }
         }
 
