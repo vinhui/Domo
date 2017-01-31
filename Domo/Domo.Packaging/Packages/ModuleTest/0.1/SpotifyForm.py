@@ -101,10 +101,10 @@ class SpotifyTestForm(Form):
 		pass
 
 	def startTimerLoop(self):
-		timer = Timer();
-		timer.Interval = 2000;
-		timer.Tick += self.timerTick;
-		timer.Start();
+		timer = Timer()
+		timer.Interval = 2000
+		timer.Tick += self.timerTick
+		timer.Start()
 		pass
 
 	def timerTick(self, *args):
