@@ -1,11 +1,11 @@
 ﻿from Domo.Modules import *
 
-class SpotifyZController(ControllerModule):
+class SpotifyController(ControllerModule):
 	def __init__(self):
-		ControllerModule.init(self, SpotifyInterface)
 		pass
 
 	def OnEnable(self):
+		ControllerModule.init(self, SpotifyInterface)
 		pass
 
 	def OnDisable(self):

@@ -8,10 +8,10 @@ class SpotifySensor(SensorModule):
 	updateInterval = 5000
 	
 	def __init__(self):
-		SensorModule.init(self, SpotifyInterface)
 		pass
 
 	def OnEnable(self):
+		SensorModule.init(self, SpotifyInterface)
 		self.updateThread = None
 		self.updateThread = Thread(ThreadStart(self.updateLoop))
 		self.updateThread.Start()

@@ -15,14 +15,14 @@ from System.Windows.Forms import (
 	TrackBar,
 	)
 
-class SpotifyZZForm(TriggerModule):
+class SpotifyForm(TriggerModule):
 	form = None
 
 	def __init__(self):
-		TriggerModule.init(self, SpotifySensor, SpotifyZController)
 		pass
 
 	def OnEnable(self):
+		TriggerModule.init(self, SpotifySensor, SpotifyController)
 		self.formThread = None
 		self.formThread = Thread(ThreadStart(self.CreateForm))
 		self.formThread.Start()
