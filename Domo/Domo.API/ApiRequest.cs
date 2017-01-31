@@ -16,7 +16,7 @@ namespace Domo.API
         /// <summary>
         /// Arguments from the request
         /// </summary>
-        public IReadOnlyDictionary<string, object> arguments = new Dictionary<string, object>();
+        public IDictionary<string, object> arguments = new Dictionary<string, object>();
 
         /// <summary>
         /// Get an argument

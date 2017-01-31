@@ -60,7 +60,7 @@ namespace Domo.Testing
             {
                 code = 0,
                 success = true,
-                data = (Dictionary<string, object>)data.arguments
+                data = new Dictionary<string, object>(data.arguments)
             };
         }
     }
