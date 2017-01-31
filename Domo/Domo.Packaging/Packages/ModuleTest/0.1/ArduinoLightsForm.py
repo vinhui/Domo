@@ -54,7 +54,7 @@ class ArduinoLightsForm(ControllerTriggerModule):
 
 	def apiListener(self, request):
 		startID = 0
-		endID = 30
+		endID = 255
 		r = 0
 		g = 0
 		b = 0
