@@ -34,11 +34,11 @@ class ArduinoData(IRawDataObject):
 		pass
 
 	def __init__(self, start, end, r, g, b):
-		self.startLed = start
-		self.endLed = end
-		self.r = r
-		self.g = g
-		self.b = b
+		self.startLed = clamp(start, 0, 255)
+		self.endLed = clamp(end, 0, 255)
+		self.r = clamp(r, 0, 255)
+		self.g = clamp(g, 0, 255)
+		self.b = clamp(b, 0, 255)
 		pass
 
 	def Read(self, reader):
@@ -47,11 +47,11 @@ class ArduinoData(IRawDataObject):
 
 	def Write(self, writer):
 		bytes = []
-		bytes.append(self.startLed)
-		bytes.append(self.endLed)
-		bytes.append(self.r)
-		bytes.append(self.g)
-		bytes.append(self.b)
+		bytes.append(clamp(self.startLed, 0, 255))
+		bytes.append(clamp(self.endLed, 0, 255))
+		bytes.append(clamp(self.r, 0, 255))
+		bytes.append(clamp(self.g, 0, 255))
+		bytes.append(clamp(self.b, 0, 255))
 
 		a = Array[Byte](bytes)
 		writer.Write(a)
