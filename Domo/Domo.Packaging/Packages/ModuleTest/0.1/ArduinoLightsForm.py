@@ -1,5 +1,7 @@
 ﻿from Domo.Modules import *
+from Domo.API import ApiManager, ApiResponse, ApiCodes
 
+from System.Collections.Generic import Dictionary
 from System.Drawing import Point, Color, Size, Brush, SolidBrush 
 from System.Threading import Thread, ThreadStart
 from System.Windows.Forms import (
@@ -18,10 +20,11 @@ class ArduinoLightsForm(ControllerTriggerModule):
 	form = None
 
 	def __init__(self):
-		ControllerTriggerModule.init(self, ArduinoLightsController)
 		pass
 
 	def OnEnable(self):
+		ControllerTriggerModule.init(self, ArduinoLightsController)
+		ApiManager.RegisterListener("arduinoLights", self.apiListener)
 		self.formThread = None
 		self.formThread = Thread(ThreadStart(self.CreateForm))
 		self.formThread.Start()
@@ -47,6 +50,24 @@ class ArduinoLightsForm(ControllerTriggerModule):
 
 		if self.form is not None:
 			self.controller.setColor(self.form.startLedID.Value, self.form.endLedID.Value, self.form.colorVals[0], self.form.colorVals[1], self.form.colorVals[2])
+		pass
+
+	def apiListener(self, request):
+		startID = 0
+		endID = 30
+		r = 0
+		g = 0
+		b = 0
+		
+		startID = request.GetArgument[int]("startID", startID)
+		endID = request.GetArgument[int]("endID", endID) 
+		r = request.GetArgument[int]("r", r)
+		g = request.GetArgument[int]("g", g)
+		b = request.GetArgument[int]("b", b)
+
+		self.controller.setColor(startID, endID, r, g, b)
+		d = {"startID":startID, "endID":endID, "r":r, "g":g, "b":b}
+		return ApiResponse.Success(Dictionary[str, object](d))
 		pass
 
 class TestForm(Form):

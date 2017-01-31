@@ -1,5 +1,7 @@
 ﻿from Domo.Modules import *
+from Domo.API import ApiManager, ApiResponse, ApiCodes
 
+from System.Collections.Generic import Dictionary
 from System.Drawing import Point, Color, Size, Brush, SolidBrush 
 from System.Threading import Thread, ThreadStart
 from System.Windows.Forms import (
@@ -23,6 +25,8 @@ class SpotifyForm(TriggerModule):
 
 	def OnEnable(self):
 		TriggerModule.init(self, SpotifySensor, SpotifyController)
+		ApiManager.RegisterListener("spotify", self.apiListener)
+
 		self.formThread = None
 		self.formThread = Thread(ThreadStart(self.CreateForm))
 		self.formThread.Start()
@@ -41,6 +45,29 @@ class SpotifyForm(TriggerModule):
 	def CreateForm(self):
 		self.form = SpotifyTestForm(self.sensor, self.controller)
 		Application.Run(self.form)
+		pass
+
+	def apiListener(self, request):
+		if request.arguments.ContainsKey("action"):
+			action = str(request.arguments["action"])
+			if action == "status":
+				return ApiResponse.Success(Dictionary[str, object](self.sensor.status))
+			elif action == "play":
+				if request.arguments.ContainsKey("track"):
+					self.controller.play(request.arguments["track"])
+				else:
+					self.controller.play()
+			elif action == "unpause" or action == "resume":
+				self.controller.unpause()
+			elif action == "pause":
+				self.controller.pause()
+			else:
+				return ApiResponse.Failed(ApiCodes.NotEnoughData, "The provided action was not recognized (action={0})".format(action))
+
+			return ApiResponse.Success()
+		else:
+			return ApiResponse.Failed(ApiCodes.NotEnoughData, "There is no action defined")
+
 		pass
 
 class SpotifyTestForm(Form):
