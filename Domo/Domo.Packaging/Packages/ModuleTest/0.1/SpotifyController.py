@@ -39,6 +39,3 @@ class SpotifyController(ControllerModule):
 		if self.hardwareInterface.isInitialized:
 			self.hardwareInterface.get("/remote/pause.json", {"pause": str(state).lower()})
 		pass
-
-	def next(self):
-		pass
