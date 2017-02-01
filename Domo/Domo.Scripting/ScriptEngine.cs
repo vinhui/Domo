@@ -27,12 +27,29 @@ namespace Domo.Scripting
 
         public void AddReference(ScriptEngine engine)
         {
+            Log.Debug("Adding reference to a different script engine");
             var vars = engine.GetVariables();
             foreach (var item in vars)
             {
-                if (item.Value != null)
+                if (item.Value != null && !item.Key.StartsWith("__") && !ContainsVar(item.Key))
+                {
+                    Log.Debug("Setting var {0} to {1}", item.Key, item.Value);
                     scope.SetVariable(item.Key, item.Value);
+                }
             }
+        }
+
+        public bool ContainsVar(string name)
+        {
+            try
+            {
+                scope.GetVariable(name);
+            }
+            catch (MissingMemberException)
+            {
+                return false;
+            }
+            return true;
         }
 
         public IEnumerable<KeyValuePair<string, dynamic>> GetVariables()
