@@ -12,7 +12,7 @@ namespace Domo.Modules
                 return reference as T;
             else
             {
-                Log.Error("Failed to fix reference for '{0}'", PythonType.Get__name__(t));
+                Log.Error("Failed to fix reference for '{0}', types do not match (requested type: '{1}'; actual type '{2}')", PythonType.Get__name__(t), typeof(T), reference.GetType());
                 return null;
             }
         }
