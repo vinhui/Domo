@@ -44,7 +44,7 @@ namespace Domo.Packaging
                     string[] split = dependency.Split('\\');
                     if (split.Length > 2)
                     {
-                        Log.Error("Dependency {0} of {1}, version {2} is in the wrong format", dependency, manifest.name, manifest, version);
+                        Log.Error("Dependency {0} of {1}, version {2} is in the wrong format", dependency, manifest.name, version);
                         return false;
                     }
                     string name = split[0];
@@ -64,14 +64,18 @@ namespace Domo.Packaging
                     {
                         Log.Debug("Finding dependency {0}, version {1} of package {2}", name, vers, manifest.name);
 
-                        Package p = packages.FirstOrDefault(x => x.manifest.name == manifest.name && x.version == version);
+                        Package p = packages.FirstOrDefault(x => x.manifest.name == manifest.name && x.version == vers);
                         if (p == null)
                         {
-                            var data = availablePackages.FirstOrDefault(x => x.Item3.name == name && x.Item2 == version);
+                            var data = availablePackages.FirstOrDefault(x => x.Item3.name == name && x.Item2 == vers);
                             if (data != null)
                             {
                                 p = LoadPackage(availablePackages, data.Item1, data.Item2, data.Item3);
                                 engine.AddReference(p.engine);
+                            }
+                            else
+                            {
+                                Log.Error("Failed to resolve dependency {0}, version {1} of package {2}, version {3}", name, vers, manifest.name, version);
                             }
                         }
                         else
