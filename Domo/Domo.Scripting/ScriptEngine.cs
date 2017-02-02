@@ -1,4 +1,5 @@
-﻿using Domo.Misc.Debug;
+﻿using Domo.Misc;
+using Domo.Misc.Debug;
 using IronPython.Hosting;
 using IronPython.Modules;
 using IronPython.Runtime;
@@ -131,7 +132,21 @@ namespace Domo.Scripting
 
         private PythonEngine CreatePythonEngine(out ScriptScope globalScope)
         {
-            PythonEngine e = Python.CreateEngine();
+            PythonEngine e;
+
+            if (Config.GetValue<bool>("python", "debug"))
+            {
+                Log.Debug("Creating new python engine with debugging enabled");
+                Dictionary<string, object> options = new Dictionary<string, object>();
+                options["Debug"] = true;
+                e = Python.CreateEngine(options);
+            }
+            else
+            {
+                Log.Debug("Creating new python engine");
+                e = Python.CreateEngine();
+            }
+
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {
                 e.Runtime.LoadAssembly(item);

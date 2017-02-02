@@ -63,6 +63,16 @@ namespace Domo.Misc
                     }
                 }
             },
+            {
+                "python",
+                new Dictionary<string, object>()
+                {
+                    {
+                        "debug",
+                        true
+                    }
+                }
+            }
         };
 
         /// <summary>
