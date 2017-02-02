@@ -18,7 +18,7 @@ namespace Domo.Packaging
 
         public PackageManager()
         {
-            Log.Debug("Initializing package manager");
+            Log.Info("Initializing package manager");
             packagePath = Config.GetValue<string>("packaging", "path");
             manifestName = Config.GetValue<string>("packaging", "manifestName");
             scriptExtension = Config.GetValue<string>("packaging", "scriptExtension");
@@ -92,11 +92,11 @@ namespace Domo.Packaging
         {
             if (packages.FirstOrDefault(x => x.path == path) != null)
             {
-                Log.Debug("Package {0}, version {1} is already loaded", manifest.name, version);
+                Log.Debug("Package {0}, version {1} is already loaded, no need to load it again", manifest.name, version);
                 return null;
             }
 
-            Log.Info("Loading package {0}", manifest.name);
+            Log.Info("Loading package {0}, version {1}", manifest.name, version);
 
             IEnumerable<string> scriptPaths = Directory.EnumerateFiles(path, String.Format("*.{0}", scriptExtension));
 
@@ -138,7 +138,7 @@ namespace Domo.Packaging
         {
             List<Tuple<string, Version, PackageManifest>> availablePackages = new List<Tuple<string, Version, PackageManifest>>();
 
-            Log.Debug("Indexing all packages");
+            Log.Info("Indexing all packages");
             string absolutePath = Path.Combine(Directory.GetCurrentDirectory(), path);
 
             if (Directory.Exists(absolutePath))
