@@ -16,7 +16,6 @@ class SpotifyInterface(HardwareInterfaceModule):
 	spotifyPort = 4371
 
 	spotifyPortSearchStart = 4370
-	#spotifyPortSearchStart = 4380
 	spotifyPortSearchEnd = 4389
 
 	subdomain = None
@@ -62,6 +61,7 @@ class SpotifyInterface(HardwareInterfaceModule):
 		pass
 
 	def findPort(self, start, end):
+		Log.Debug("Running spotify port detection")
 		for i in range(start, end + 1):
 			try:
 				response = self.newWebClient().DownloadString(self.spotifyHostUrlNoPort + ":" + str(i))
