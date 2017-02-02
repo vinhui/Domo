@@ -119,13 +119,6 @@ class TestForm(Form):
 		self.bars = [TrackBar(), TrackBar(), TrackBar()]
 
 		for i, b in enumerate(self.bars):
-			if i is 0:
-				b.BackgroundColorColor = Color.Red
-			if i is 1:
-				b.BackgroundColorColor = Color.Blue
-			if i is 2:
-				b.BackgroundColorColor = Color.Green
-
 			b.Size = Size(width, height)
 			b.Location = Point(startX, startY + (i * (offset + height)))
 			b.Minimum = 0
