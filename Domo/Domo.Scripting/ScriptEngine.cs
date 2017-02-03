@@ -146,18 +146,18 @@ namespace Domo.Scripting
         {
             PythonEngine e;
 
-            if (Config.GetValue<bool>("python", "debug"))
+            Dictionary<string, object> options = new Dictionary<string, object>();
+
+            options["Debug"] = Config.GetValue<bool>("python", "debug");
+            options["Frames"] = Config.GetValue<bool>("python", "frames");
+            options["FullFrames"] = Config.GetValue<bool>("python", "fullFrames");
+
+            Log.Debug("Creating new python engine with the following options:");
+            foreach (var item in options)
             {
-                Log.Debug("Creating new python engine with debugging enabled");
-                Dictionary<string, object> options = new Dictionary<string, object>();
-                options["Debug"] = true;
-                e = Python.CreateEngine(options);
+                Log.Debug("\t{0}: {1}", item.Key, item.Value);
             }
-            else
-            {
-                Log.Debug("Creating new python engine");
-                e = Python.CreateEngine();
-            }
+            e = Python.CreateEngine(options);
 
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {

@@ -70,6 +70,14 @@ namespace Domo.Misc
                     {
                         "debug",
                         true
+                    },
+                    {
+                        "frames",
+                        true
+                    },
+                    {
+                        "fullFrames",
+                        true
                     }
                 }
             }
