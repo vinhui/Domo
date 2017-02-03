@@ -117,8 +117,8 @@ namespace Domo.Scripting
             }
             catch (IronPython.Runtime.Exceptions.ImportException ex)
             {
-                Log.Error("Failed to load {0}, there was an error with importing a module", Path.GetFileNameWithoutExtension(path));
-                Log.Exception(ex);
+                Log.Error("Failed to load {0}, there was an error with importing a module:", Path.GetFileNameWithoutExtension(path));
+                Log.Error(ex.Message);
             }
         }
 
