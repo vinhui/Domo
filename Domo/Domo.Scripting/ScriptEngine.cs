@@ -17,27 +17,22 @@ namespace Domo.Scripting
 {
     public class ScriptEngine
     {
+        public readonly string baseDir;
         public PythonEngine engine { get; private set; }
         private ScriptScope _scope;
         public ScriptScope scope { get { return _scope; } }
 
-        public ScriptEngine()
+        public ScriptEngine(string baseDir)
         {
+            this.baseDir = baseDir;
             engine = CreatePythonEngine(out _scope);
+            AddSearchPath(baseDir);
         }
 
         public void AddReference(ScriptEngine engine)
         {
             Log.Debug("Adding reference to a different script engine");
-            var vars = engine.GetVariables();
-            foreach (var item in vars)
-            {
-                if (item.Value != null && !item.Key.StartsWith("__") && !ContainsVar(item.Key))
-                {
-                    Log.Debug("Setting var {0} to {1}", item.Key, item.Value);
-                    scope.SetVariable(item.Key, item.Value);
-                }
-            }
+            AddSearchPath(engine.baseDir);
         }
 
         public bool ContainsVar(string name)
@@ -119,6 +114,11 @@ namespace Domo.Scripting
             {
                 Log.Error("Failed to load {0}, there was an error with importing a module:", Path.GetFileNameWithoutExtension(path));
                 Log.Error(ex.Message);
+                Log.Debug("Search paths for the engine are:");
+                foreach (var item in engine.GetSearchPaths())
+                {
+                    Log.Debug("\t" + item);
+                }
             }
         }
 
@@ -127,6 +127,18 @@ namespace Domo.Scripting
             foreach (string path in paths)
             {
                 AddFile(path);
+            }
+        }
+
+        public void AddSearchPath(string path)
+        {
+            ICollection<string> searchPaths = engine.GetSearchPaths();
+            string s = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
+            if (!searchPaths.Contains(s))
+            {
+                Log.Debug("Adding search path '{0}' to engine", path);
+                searchPaths.Add(s);
+                engine.SetSearchPaths(searchPaths);
             }
         }
 
@@ -151,6 +163,7 @@ namespace Domo.Scripting
             {
                 e.Runtime.LoadAssembly(item);
             }
+
             globalScope = e.CreateScope();
 
             PythonType log = DynamicHelpers.GetPythonTypeFromType(typeof(Log));

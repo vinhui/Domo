@@ -102,7 +102,7 @@ namespace Domo.Packaging
 
             Log.Debug("Creating new script engine for package {0}, version {1}", manifest.name, version);
 
-            ScriptEngine engine = new ScriptEngine();
+            ScriptEngine engine = new ScriptEngine(path);
 
             if (manifest.dependencies != null)
             {

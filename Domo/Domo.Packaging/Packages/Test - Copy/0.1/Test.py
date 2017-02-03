@@ -3,6 +3,8 @@
 #from System import Environment
 import System.IO
 
+from Temp import Temp
+
 class Test2:
     x = 10;
     b = "Hello";

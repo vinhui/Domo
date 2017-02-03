@@ -2,6 +2,8 @@
 
 from System.Threading import Thread, ThreadStart
 
+from nmap import PortScanner
+
 class LanSensor(SensorModule):
 	devices = []
 	onScanDone = []
