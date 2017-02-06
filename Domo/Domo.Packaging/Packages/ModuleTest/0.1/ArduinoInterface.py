@@ -19,6 +19,8 @@ class ArduinoInterface(HardwareInterfaceModule):
 	readBuffer = []
 
 	def OnEnable(self):
+		self.readWriteMode = ReadWriteMode.Both
+
 		if not Config.ContainsKey("Arduino", "comPort"):
 			Config.SetValue(self.comPort, "Arduino", "comPort")
 		else:
