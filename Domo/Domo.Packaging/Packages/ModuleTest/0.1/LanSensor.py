@@ -1,5 +1,7 @@
 ﻿from Domo.Modules import *
+from Domo.API import ApiManager, ApiResponse
 
+from System.Collections.Generic import Dictionary
 from System.Threading import Thread, ThreadStart
 
 from nmap import PortScanner
@@ -23,6 +25,8 @@ class LanSensor(SensorModule):
 		self.scanningThread = None
 		self.scanningThread = Thread(ThreadStart(self.scanningLoop))
 		self.scanningThread.Start()
+
+		ApiManager.RegisterListener("lan", self.apiListener)
 		pass
 
 	def OnDisable(self):
@@ -30,6 +34,11 @@ class LanSensor(SensorModule):
 			self.scanningThread.Abort()
 
 		self.portScanner = None
+		pass
+	
+	def apiListener(self, request):
+		d = { "devices": [x.toDict() for x in self.devices] }
+		return ApiResponse.Success(Dictionary[str,object](d))
 		pass
 
 	def registerCallback(self, call):
@@ -40,11 +49,12 @@ class LanSensor(SensorModule):
 		self.onScanDone.remove(call)
 		pass
 
+
 	def scanningLoop(self):
 		if self.portScanner is not None:
-			self.devices = []
 			result = self.portScanner.scan(hosts=self.scanHosts, arguments=self.scanArgs)
 			Log.Debug("Nmap scan cycle done")
+			self.devices = []
 			if result is not None:
 				for ip, obj in result["scan"].iteritems():
 					if "mac" in obj["addresses"]:
@@ -71,4 +81,9 @@ class LanDevice:
 
 		if len(nmapObj["vendor"]) > 0:
 			self.vendor = nmapObj["vendor"][self.mac]
+		pass
+
+	def toDict(self):
+		d = {"ip":self.ip, "mac":self.mac, "vendor":self.vendor}
+		return d
 		pass
