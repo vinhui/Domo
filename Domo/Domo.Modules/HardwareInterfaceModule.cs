@@ -41,7 +41,10 @@ namespace Domo.Modules
         /// Send data to the hardware
         /// </summary>
         /// <param name="data">Data to send</param>
-        public abstract void SendDataRaw(byte[] data);
+        public virtual void SendDataRaw(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Read data from the hardware
@@ -74,6 +77,9 @@ namespace Domo.Modules
         /// </summary>
         /// <param name="data">Object to write the data in to</param>
         /// <returns>Returns success</returns>
-        public abstract bool ReadDataRaw(out byte[] data);
+        public virtual bool ReadDataRaw(out byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
