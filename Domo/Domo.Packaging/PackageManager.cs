@@ -136,8 +136,10 @@ namespace Domo.Packaging
         {
             List<Tuple<string, Version, PackageManifest>> availablePackages = new List<Tuple<string, Version, PackageManifest>>();
 
-            Log.Debug("Indexing all packages");
+            path = Path.Combine(Directory.GetCurrentDirectory(), path);
+            Log.Debug("Indexing all packages at {0}", path);
             string[] directories = Directory.GetDirectories(Path.Combine(Directory.GetCurrentDirectory(), path));
+            Log.Debug("Found {0} potentional packages", directories.Length);
             foreach (string directory in directories)
             {
                 string[] versionDirectories = Directory.GetDirectories(directory);
