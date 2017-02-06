@@ -138,14 +138,17 @@ namespace Domo.Packaging
         {
             List<Tuple<string, Version, PackageManifest>> availablePackages = new List<Tuple<string, Version, PackageManifest>>();
 
-            Log.Info("Indexing all packages");
             string absolutePath = Path.Combine(Directory.GetCurrentDirectory(), path);
+            Log.Info("Indexing all packages at {0}", absolutePath);
 
             if (Directory.Exists(absolutePath))
             {
                 string[] directories = Directory.GetDirectories(path);
+                Log.Debug("Found {0} potentional packages", directories.Length);
+
                 foreach (string directory in directories)
                 {
+                    Log.Debug("Checking directory {0} for packages", directory);
                     string[] versionDirectories = Directory.GetDirectories(directory);
                     foreach (string versionDir in versionDirectories)
                     {
@@ -155,6 +158,7 @@ namespace Domo.Packaging
                         if (!string.IsNullOrEmpty(manifestPath))
                         {
                             string manifestContent = File.ReadAllText(manifestPath);
+                            Log.Debug("Deserializing manifest at {0}", manifestPath);
                             PackageManifest manifest = Serializer.instance.Deserialize<PackageManifest>(manifestContent);
 
                             Version version = new Version(new DirectoryInfo(versionDir).Name);
