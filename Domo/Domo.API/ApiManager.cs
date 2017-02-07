@@ -61,7 +61,7 @@ namespace Domo.API
                 }
             }
 
-            Log.Info("Found {0} APIs", cnt);
+            Log.Info("Found {0} API{1}", cnt, (cnt > 1 || cnt == 0) ? "s" : "");
         }
 
         /// <summary>
