@@ -60,6 +60,9 @@ namespace Domo.Misc.Debug
         /// <param name="msg">Message to log</param>
         public abstract void Log(LogType type, string msg);
 
+        internal virtual void OnShutDown()
+        { }
+
         public enum LogType
         {
             Debug = -1,

@@ -13,6 +13,7 @@ namespace Domo.Misc.Debug
         static Log()
         {
             RegisterLogger<ConsoleLogger>();
+            RegisterLogger<FileLogger>();
         }
 
         /// <summary>
@@ -65,6 +66,12 @@ namespace Domo.Misc.Debug
             Log.Debug("Unregistering logger '" + type.FullName + "'");
 
             loggers.RemoveAll(x => x.GetType() == type);
+        }
+
+        public static void OnShutDown()
+        {
+            foreach (var item in loggers)
+                item.OnShutDown();
         }
 
         #region Log Debug

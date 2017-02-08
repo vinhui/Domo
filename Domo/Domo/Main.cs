@@ -1,4 +1,5 @@
 ﻿using Domo.API;
+using Domo.Misc.Debug;
 using Domo.Modules;
 using Domo.Packaging;
 
@@ -21,6 +22,7 @@ namespace Domo
         {
             ApiManager.OnShutdown();
             ModuleManager.ShutDown();
+            Log.OnShutDown();
         }
     }
 }
