@@ -12,7 +12,7 @@ namespace Domo.Modules
     /// </summary>
     public class ModuleFactory : IDisposable
     {
-        private List<KeyValuePair<PythonType, ModuleBase>> modules = new List<KeyValuePair<PythonType, ModuleBase>>();
+        private List<ModuleListItem> modules = new List<ModuleListItem>();
 
         /// <summary>
         /// Load all the modules from a script scope
@@ -28,7 +28,8 @@ namespace Domo.Modules
                 foreach (var type in types)
                 {
                     Log.Debug("Found module '{0}'", PythonType.Get__name__(type));
-                    modules.Add(new KeyValuePair<PythonType, ModuleBase>(
+                    modules.Add(new ModuleListItem(
+                        package,
                         type,
                         package.engine.engine.Operations.CreateInstance(type) as ModuleBase
                         ));
@@ -40,8 +41,8 @@ namespace Domo.Modules
             // All the references should be assigned before going into the OnEnable
             foreach (var item in modules)
             {
-                Log.Debug("Calling OnEnable on '{0}'", PythonType.Get__name__(item.Key));
-                item.Value.OnEnable();
+                Log.Debug("Calling OnEnable on '{0}'", item.name);
+                item.instance.OnEnable();
             }
 
             Log.Debug("Called all OnEnable methods on the modules");
@@ -53,7 +54,7 @@ namespace Domo.Modules
                 return types;
 
             List<PythonType> typeList = new List<PythonType>(types);
-            List<string> typeNames = new List<string>(typeList.Select(x => PythonType.Get__name__(x)));
+            List<string> typeNames = typeList.Select(x => PythonType.Get__name__(x)).ToList();
 
             for (int i = order.Length - 1; i >= 0; i--)
             {
@@ -84,8 +85,8 @@ namespace Domo.Modules
         {
             foreach (var item in modules)
             {
-                if (item.Key == t)
-                    return item.Value;
+                if (item.type == t)
+                    return item.instance;
             }
 
             throw new KeyNotFoundException("The module you're trying to get an instance of has not been loaded");
@@ -114,12 +115,29 @@ namespace Domo.Modules
         /// </summary>
         public void Dispose()
         {
-            Log.Debug("Disposing of the module factory");
+            Log.Info("Disposing of the module factory");
+            modules.Reverse();
             foreach (var item in modules)
             {
-                item.Value.OnDisable();
+                Log.Debug("Calling OnDisable on '{0}'", item.name);
+                item.instance.OnDisable();
             }
             modules.Clear();
+        }
+
+        private class ModuleListItem
+        {
+            public string name { get { return PythonType.Get__name__(type); } }
+            public readonly Package package;
+            public readonly PythonType type;
+            public readonly ModuleBase instance;
+
+            public ModuleListItem(Package package, PythonType type, ModuleBase instance)
+            {
+                this.package = package;
+                this.type = type;
+                this.instance = instance;
+            }
         }
     }
 }

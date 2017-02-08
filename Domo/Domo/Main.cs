@@ -20,8 +20,8 @@ namespace Domo
 
         public static void ShutDown()
         {
-            ApiManager.OnShutdown();
             ModuleManager.ShutDown();
+            ApiManager.OnShutdown();
             Log.OnShutDown();
         }
     }
