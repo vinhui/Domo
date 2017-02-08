@@ -5,6 +5,6 @@
   "permissions": [
   ],
   "dependencies": [
-    "Nmap\\0.6.1"
+    "Nmap"
   ]
 }

@@ -35,54 +35,55 @@ namespace Domo.Packaging
             }
         }
 
-        public bool ResolveDependencies(List<Tuple<string, Version, PackageManifest>> availablePackages, ScriptEngine engine, PackageManifest manifest, Version version)
+        public bool ResolveDependencies(List<Tuple<string, Version, PackageManifest>> availablePackages, ScriptEngine engine, PackageManifest parentManifest, Version version)
         {
-            foreach (string dependency in manifest.dependencies)
+            foreach (string dependency in parentManifest.dependencies)
             {
+                Version vers = null;
+                string name = dependency;
                 if (dependency.Contains('\\'))
                 {
                     string[] split = dependency.Split('\\');
                     if (split.Length > 2)
                     {
-                        Log.Error("Dependency {0} of {1}, version {2} is in the wrong format", dependency, manifest.name, version);
+                        Log.Error("Dependency {0} of {1}, version {2} is in the wrong format", dependency, parentManifest.name, version);
                         return false;
                     }
-                    string name = split[0];
-                    Version vers = null;
+                    name = split[0];
 
-                    try
+                    if (!String.IsNullOrEmpty(split[1]))
                     {
-                        vers = new Version(split[1]);
-                    }
-                    catch
-                    {
-                        Log.Error("Version number of package {0}, dependency {1} is in the wrong format", manifest.name, name);
-                        return false;
-                    }
-
-                    if (vers != null)
-                    {
-                        Log.Debug("Finding dependency {0}, version {1} of package {2}", name, vers, manifest.name);
-
-                        Package p = packages.FirstOrDefault(x => x.manifest.name == manifest.name && x.version == vers);
-                        if (p == null)
+                        try
                         {
-                            var data = availablePackages.FirstOrDefault(x => x.Item3.name == name && x.Item2 == vers);
-                            if (data != null)
-                            {
-                                p = LoadPackage(availablePackages, data.Item1, data.Item2, data.Item3);
-                                engine.AddReference(p.engine);
-                            }
-                            else
-                            {
-                                Log.Error("Failed to resolve dependency {0}, version {1} of package {2}, version {3}", name, vers, manifest.name, version);
-                            }
+                            vers = new Version(split[1]);
                         }
-                        else
+                        catch
                         {
-                            engine.AddReference(p.engine);
+                            Log.Error("Version number of package {0}, dependency {1} is in the wrong format", parentManifest.name, name);
+                            return false;
                         }
                     }
+                }
+
+                Log.Debug("Finding dependency {0}, version {1} of package {2}", name, vers, parentManifest.name);
+
+                Package p = packages.FirstOrDefault(x => x.manifest.name == parentManifest.name && (vers != null && x.version == vers));
+                if (p == null)
+                {
+                    var data = availablePackages.FirstOrDefault(x => x.Item3.name == name && ((vers != null) ? x.Item2 == vers : true));
+                    if (data != null)
+                    {
+                        p = LoadPackage(availablePackages, data.Item1, data.Item2, data.Item3);
+                        engine.AddReference(p.engine);
+                    }
+                    else
+                    {
+                        Log.Error("Failed to resolve dependency {0}, version {1} of package {2}, version {3}", name, (vers != null) ? vers.ToString() : "*", parentManifest.name, version);
+                    }
+                }
+                else
+                {
+                    engine.AddReference(p.engine);
                 }
             }
             return true;
@@ -161,6 +162,7 @@ namespace Domo.Packaging
                             Log.Debug("Deserializing manifest at {0}", manifestPath);
                             PackageManifest manifest = Serializer.instance.Deserialize<PackageManifest>(manifestContent);
 
+                            Log.Debug("Trying to parse version of {0}", manifest.name);
                             Version version = new Version(new DirectoryInfo(versionDir).Name);
 
                             Log.Debug("Found package {0}, version {1} at {2}", manifest.name, version, manifestPath);
