@@ -4,7 +4,7 @@ from Domo.API import ApiManager, ApiResponse
 from System.Collections.Generic import Dictionary
 from System.Threading import Thread, ThreadStart
 
-from nmap import PortScanner
+from nmap import PortScanner, PortScannerError
 
 class LanSensor(SensorModule):
 	devices = []
@@ -20,7 +20,10 @@ class LanSensor(SensorModule):
 	scanInterval = 1000
 
 	def OnEnable(self):
-		self.portScanner = PortScanner()
+		try:
+			self.portScanner = PortScanner()
+		except PortScannerError:
+			Log.Error("Failed to create nmap port scanner!")
 
 		self.scanningThread = None
 		self.scanningThread = Thread(ThreadStart(self.scanningLoop))
@@ -52,19 +55,22 @@ class LanSensor(SensorModule):
 
 	def scanningLoop(self):
 		if self.portScanner is not None:
-			result = self.portScanner.scan(hosts=self.scanHosts, arguments=self.scanArgs)
-			Log.Debug("Nmap scan cycle done")
-			self.devices = []
-			if result is not None:
-				for ip, obj in result["scan"].iteritems():
-					if "mac" in obj["addresses"]:
-						self.devices.append(LanDevice(obj))
+			try:
+				result = self.portScanner.scan(hosts=self.scanHosts, arguments=self.scanArgs)
+				Log.Debug("Nmap scan cycle done")
+				self.devices = []
+				if result is not None:
+					for ip, obj in result["scan"].iteritems():
+						if "mac" in obj["addresses"]:
+							self.devices.append(LanDevice(obj))
 
-			for i in self.onScanDone:
-				i()
+				for i in self.onScanDone:
+					i()
 
-			Thread.Sleep(self.scanInterval)
-			self.scanningLoop()
+				Thread.Sleep(self.scanInterval)
+				self.scanningLoop()
+			except PortScannerError:
+				Log.Error("Failed to use nmap port scanner!")
 		pass
 
 class LanDevice:
