@@ -48,6 +48,10 @@
       <Project>{DFC5A6EC-E496-4B68-9A0D-8F775676293F}</Project>
       <Name>Domo.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
+      <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
+      <Name>Domo.Misc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domo.Modules\Domo.Modules.csproj">
       <Project>{BBD08AE1-60B6-407C-9205-CA57011D9107}</Project>
       <Name>Domo.Modules</Name>
