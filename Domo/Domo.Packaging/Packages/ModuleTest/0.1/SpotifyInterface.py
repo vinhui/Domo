@@ -94,7 +94,13 @@ class SpotifyInterface(HardwareInterfaceModule):
 		pass
 
 	def newWebClient(self):
-		webClient = WebClient()
+		webClient = TimeOutWebClient()
 		webClient.Headers.Add("Origin", "https://open.spotify.com")
 		return webClient
 		pass
+
+class TimeOutWebClient(WebClient):
+	def GetWebRequest(self, uri):
+		req = WebClient.GetWebRequest(self, uri)
+		req.Timeout = 10000
+		return req
