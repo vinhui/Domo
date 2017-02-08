@@ -5,6 +5,6 @@
   "permissions": [
   ],
   "dependencies":[
-    "Test\\0.1"
+    "Test"
   ]
 }

@@ -41,9 +41,9 @@ namespace Domo.Packaging
             {
                 Version vers = null;
                 string name = dependency;
-                if (dependency.Contains('\\'))
+                if (dependency.Contains('/'))
                 {
-                    string[] split = dependency.Split('\\');
+                    string[] split = dependency.Split('/');
                     if (split.Length > 2)
                     {
                         Log.Error("Dependency {0} of {1}, version {2} is in the wrong format", dependency, parentManifest.name, version);
