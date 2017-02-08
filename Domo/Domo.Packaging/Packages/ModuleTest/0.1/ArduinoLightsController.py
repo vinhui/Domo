@@ -11,6 +11,7 @@ class ArduinoLightsController(ControllerModule):
 		pass
 
 	def OnDisable(self):
+		self.SendData(ArduinoData(0, 255, 0, 0, 0))
 		pass
 
 	def setColor(self, led, r, g, b):
