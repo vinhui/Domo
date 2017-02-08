@@ -1,8 +1,9 @@
 ﻿using Domo.Misc.Debug;
+using Domo.Packaging;
 using IronPython.Runtime.Types;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 
 namespace Domo.Modules
 {
@@ -11,26 +12,26 @@ namespace Domo.Modules
     /// </summary>
     public class ModuleFactory : IDisposable
     {
-        private Dictionary<PythonType, ModuleBase> modules = new Dictionary<PythonType, ModuleBase>();
+        private List<KeyValuePair<PythonType, ModuleBase>> modules = new List<KeyValuePair<PythonType, ModuleBase>>();
 
         /// <summary>
         /// Load all the modules from a script scope
         /// </summary>
         /// <param name="scope">Scope to get modules from</param>
         /// <exception cref="ArgumentException">Gets thrown when the type is already loaded</exception>
-        public void LoadModules(IEnumerable<Scripting.ScriptEngine> engines)
+        public void LoadModules(IEnumerable<Package> packages)
         {
-            List<PythonType> types = new List<PythonType>();
-
-            foreach (var engine in engines)
+            foreach (var package in packages)
             {
-                foreach (var type in engine.GetTypes<ModuleBase>())
+                IEnumerable<PythonType> types = SortTypes(package.engine.GetTypes<ModuleBase>(), package.manifest.executionOrder);
+
+                foreach (var type in types)
                 {
                     Log.Debug("Found module '{0}'", PythonType.Get__name__(type));
-                    modules.Add(
+                    modules.Add(new KeyValuePair<PythonType, ModuleBase>(
                         type,
-                        engine.engine.Operations.CreateInstance(type) as ModuleBase
-                        );
+                        package.engine.engine.Operations.CreateInstance(type) as ModuleBase
+                        ));
                 }
             }
 
@@ -39,10 +40,39 @@ namespace Domo.Modules
             // All the references should be assigned before going into the OnEnable
             foreach (var item in modules)
             {
+                Log.Debug("Calling OnEnable on '{0}'", PythonType.Get__name__(item.Key));
                 item.Value.OnEnable();
             }
 
             Log.Debug("Called all OnEnable methods on the modules");
+        }
+
+        private IEnumerable<PythonType> SortTypes(IEnumerable<PythonType> types, string[] order)
+        {
+            if (order == null || order.Length == 0)
+                return types;
+
+            List<PythonType> typeList = new List<PythonType>(types);
+            List<string> typeNames = new List<string>(typeList.Select(x => PythonType.Get__name__(x)));
+
+            for (int i = order.Length - 1; i >= 0; i--)
+            {
+                for (int n = 0; n < typeNames.Count; n++)
+                {
+                    if (order[i] == typeNames[n])
+                    {
+                        PythonType t = typeList[n];
+                        string name = typeNames[n];
+                        typeList.RemoveAt(n);
+                        typeNames.RemoveAt(n);
+                        typeList.Insert(0, t);
+                        typeNames.Insert(0, name);
+                        break;
+                    }
+                }
+            }
+
+            return typeList;
         }
 
         /// <summary>

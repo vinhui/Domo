@@ -7,5 +7,6 @@
         public readonly string iconPath;
         public readonly string[] permissions;
         public readonly string[] dependencies;
+        public readonly string[] executionOrder;
     }
 }

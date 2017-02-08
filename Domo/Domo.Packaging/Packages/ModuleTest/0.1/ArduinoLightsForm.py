@@ -25,9 +25,11 @@ class ArduinoLightsForm(ControllerTriggerModule):
 	def OnEnable(self):
 		ControllerTriggerModule.init(self, ArduinoLightsController)
 		ApiManager.RegisterListener("arduinoLights", self.apiListener)
+
 		self.formThread = None
-		self.formThread = Thread(ThreadStart(self.CreateForm))
-		self.formThread.Start()
+		if self.controller.hardwareInterface.isInitialized:
+			self.formThread = Thread(ThreadStart(self.CreateForm))
+			self.formThread.Start()
 		pass
 	
 	def OnDisable(self):

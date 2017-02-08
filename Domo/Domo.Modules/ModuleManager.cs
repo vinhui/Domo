@@ -3,7 +3,6 @@ using Domo.Packaging;
 using IronPython.Runtime.Types;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Domo.Modules
 {
@@ -33,7 +32,7 @@ namespace Domo.Modules
             Log.Info("Loading all modules from the currently loaded packages");
             Stopwatch s = Stopwatch.StartNew();
 
-            factory.LoadModules(packages.Select(x => x.engine));
+            factory.LoadModules(packages);
 
             s.Stop();
             Log.Info("Finished loading all modules in {0}ms", s.ElapsedMilliseconds);

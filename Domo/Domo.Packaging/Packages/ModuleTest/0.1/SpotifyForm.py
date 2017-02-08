@@ -27,9 +27,10 @@ class SpotifyForm(TriggerModule):
 		TriggerModule.init(self, SpotifySensor, SpotifyController)
 		ApiManager.RegisterListener("spotify", self.apiListener)
 
-		self.formThread = None
-		self.formThread = Thread(ThreadStart(self.CreateForm))
-		self.formThread.Start()
+		if self.controller.hardwareInterface.isInitialized:
+			self.formThread = None
+			self.formThread = Thread(ThreadStart(self.CreateForm))
+			self.formThread.Start()
 		pass
 	
 	def OnDisable(self):
