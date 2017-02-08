@@ -7,7 +7,7 @@
   "dependencies": [
     "Nmap"
   ],
-  "executionOrder": [
+  "executionPriority": [
     "ArduinoInterface",
     "ArduinoLightsController",
     "ArduinoLightsForm",

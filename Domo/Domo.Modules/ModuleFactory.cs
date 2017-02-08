@@ -23,7 +23,7 @@ namespace Domo.Modules
         {
             foreach (var package in packages)
             {
-                IEnumerable<PythonType> types = SortTypes(package.engine.GetTypes<ModuleBase>(), package.manifest.executionOrder);
+                IEnumerable<PythonType> types = SortTypes(package.engine.GetTypes<ModuleBase>(), package.manifest.executionPriority);
 
                 foreach (var type in types)
                 {
