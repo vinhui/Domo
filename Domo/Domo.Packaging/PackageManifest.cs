@@ -6,6 +6,7 @@
         public readonly string description;
         public readonly string iconPath;
         public readonly string[] permissions;
+        public readonly string[] searchPaths;
         public readonly string[] dependencies;
         public readonly string[] executionPriority;
     }

@@ -74,7 +74,10 @@ namespace Domo.Packaging
                     if (data != null)
                     {
                         p = LoadPackage(availablePackages, data.Item1, data.Item2, data.Item3);
-                        engine.AddReference(p.engine);
+                        if (p.engine != null)
+                        {
+                            engine.AddReference(p.engine);
+                        }
                     }
                     else
                     {
@@ -105,6 +108,14 @@ namespace Domo.Packaging
 
             ScriptEngine engine = new ScriptEngine(path);
 
+            if(manifest.searchPaths != null)
+            {
+                foreach (var searchPath in manifest.searchPaths)
+                {
+                    engine.AddSearchPath(searchPath);
+                }
+            }
+
             if (manifest.dependencies != null)
             {
                 Log.Debug("Resolving dependencies for package {0}, version {1}", manifest.name, version);
@@ -118,6 +129,7 @@ namespace Domo.Packaging
 
             Log.Debug("Compiling scripts for package {0}, version {1}", manifest.name, version);
 
+            engine.AddPermissions(manifest.permissions);
             engine.AddFiles(scriptPaths.ToArray());
 
             Package p = new Package(manifest, version, path, engine);

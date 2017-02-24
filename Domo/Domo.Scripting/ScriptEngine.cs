@@ -10,22 +10,32 @@ using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using PythonEngine = Microsoft.Scripting.Hosting.ScriptEngine;
 
 namespace Domo.Scripting
 {
     public class ScriptEngine
     {
+        private delegate object ImportModuleDelegate(CodeContext context, string moduleName, PythonDictionary globals, PythonDictionary locals, PythonTuple tuple, int level = -1);
+
         public readonly string baseDir;
         public PythonEngine engine { get; private set; }
+
         private ScriptScope _scope;
         public ScriptScope scope { get { return _scope; } }
+
+        public List<string> permissions { get; private set; } = new List<string>();
 
         public ScriptEngine(string baseDir)
         {
             this.baseDir = baseDir;
             engine = CreatePythonEngine(out _scope);
+
+            ICollection<string> searchPaths = engine.GetSearchPaths();
+            engine.SetSearchPaths(searchPaths.Where(x => !x.EndsWith("Lib") && !x.EndsWith("DLLs")).ToList());
             AddSearchPath(baseDir);
         }
 
@@ -33,6 +43,11 @@ namespace Domo.Scripting
         {
             Log.Debug("Adding reference to a different script engine");
             AddSearchPath(engine.baseDir);
+        }
+
+        public void AddPermissions(IEnumerable<string> permissions)
+        {
+            this.permissions.AddRange(permissions);
         }
 
         public bool ContainsVar(string name)
@@ -112,10 +127,15 @@ namespace Domo.Scripting
             }
             catch (IronPython.Runtime.Exceptions.ImportException ex)
             {
-                Log.Error("Failed to load {0}, there was an error with importing a module:", Path.GetFileNameWithoutExtension(path));
+                Log.Error("Failed to load {0} at {1}, there was an error with importing a module:", Path.GetFileNameWithoutExtension(path), path);
                 Log.Error(ex.Message);
                 Log.Debug("Search paths for the engine are:");
                 foreach (var item in engine.GetSearchPaths())
+                {
+                    Log.Debug("\t" + item);
+                }
+                Log.Debug("Permissions for the engine are:");
+                foreach (var item in permissions)
                 {
                     Log.Debug("\t" + item);
                 }
@@ -171,15 +191,46 @@ namespace Domo.Scripting
             globalScope.SetVariable("Log", log);
 
             ScriptScope builtinScope = Python.GetBuiltinModule(e);
-            //builtinScope.SetVariable("__import__", new Func<CodeContext, string, PythonDictionary, PythonDictionary, PythonTuple, object>(ImportModule));
+            builtinScope.SetVariable("__import__", new ImportModuleDelegate(ImportModule));
 
             return e;
         }
 
-        private static object ImportModule(CodeContext context, string moduleName, PythonDictionary globals, PythonDictionary locals, PythonTuple tuple)
+        private object ImportModule(CodeContext context, string moduleName, PythonDictionary globals, PythonDictionary locals, PythonTuple tuple, int level)
         {
-            object o = Builtin.__import__(context, moduleName, globals, locals, tuple, -1);
+            object o = null;
+            List<string> fullNames = new List<string>();
+            if (tuple != null && tuple.Count > 0)
+                foreach (var item in tuple)
+                {
+                    if (item.ToString() != "*")
+                        fullNames.Add(moduleName + "." + item);
+                }
+
+            if (tuple == null || fullNames.Count == 0)
+                fullNames.Add(moduleName);
+
+            List<string> matches = new List<string>(fullNames.Count);
+
+            foreach (var fullName in fullNames)
+            {
+                foreach (var regex in permissions)
+                {
+                    if(Regex.IsMatch(fullName, WildCardToRegular(regex)))
+                    {
+                        matches.Add(fullName);
+                        break;
+                    }
+                }
+            }
+            
+            o = Builtin.ImportWithPermissions(context, moduleName, globals, locals, tuple, level, matches);
             return o;
+        }
+
+        private static String WildCardToRegular(String value)
+        {
+            return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
         }
 
         public void Unload()

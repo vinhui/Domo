@@ -3,6 +3,10 @@
   "description": "Test Description",
   "iconPath": null,
   "permissions": [
+    "*"
+  ],
+  "searchPaths":[
+    "Lib"
   ],
   "dependencies": [
     "Nmap"

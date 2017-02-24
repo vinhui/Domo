@@ -3,6 +3,7 @@
   "description": "Package for interaction with Nmap. Make sure you have Nmap installed.",
   "iconPath": null,
   "permissions": [
+    "*"
   ],
   "dependencies": [
   ]
