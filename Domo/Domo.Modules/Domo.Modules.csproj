@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNoTesting|AnyCPU'">
+    <OutputPath>bin\DebugNoTesting\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
