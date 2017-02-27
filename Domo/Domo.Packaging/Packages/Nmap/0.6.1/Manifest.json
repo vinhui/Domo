@@ -5,6 +5,9 @@
   "permissions": [
     "*"
   ],
+  "searchPaths":[
+    "Lib"
+  ],
   "dependencies": [
   ]
 }

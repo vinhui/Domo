@@ -2,7 +2,6 @@
 #import File from System.IO
 #from System import Environment
 from System.IO import Directory as dir
-import csv
 
 class Test2:
     x = 10;

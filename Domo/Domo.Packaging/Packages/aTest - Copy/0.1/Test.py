@@ -2,8 +2,6 @@
 #import File from System.IO
 from System.Collections.Generic import Dictionary
 import System.IO
-import csv
-import System.nonexistant
 
 class Test3:
     x = 10;
