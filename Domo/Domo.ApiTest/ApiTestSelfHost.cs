@@ -12,7 +12,7 @@ namespace Domo.ApiTest
     public class ApiTestSelfHost
     {
         static HttpSelfHostServer server;
-        public static Dictionary<string, Dictionary<string, Action>> packageActions = new Dictionary<string, Dictionary<string, Action>>();
+        public static Dictionary<PackageManifest, Dictionary<string, Action>> packageActions = new Dictionary<PackageManifest, Dictionary<string, Action>>();
 
         public ApiTestSelfHost(List<Package> packages)
         {
@@ -26,11 +26,11 @@ namespace Domo.ApiTest
                     try
                     {
                         var action = variable.Value.ApiActionInvoke;
-                        if(!packageActions.ContainsKey(package.manifest.name))
+                        if(!packageActions.ContainsKey(package.manifest))
                         {
-                            packageActions.Add(package.manifest.name, new Dictionary<string, Action>());
+                            packageActions.Add(package.manifest, new Dictionary<string, Action>());
                         }
-                        packageActions[package.manifest.name].Add(variable.Key, action);
+                        packageActions[package.manifest].Add(variable.Key, action);
                     }
                     catch
                     {

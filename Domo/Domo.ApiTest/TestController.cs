@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domo.Packaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,15 +11,20 @@ namespace Domo.ApiTest
 {
     public class TestController : ApiController
     {
-        public IEnumerable<string> GetModules()
+        public IEnumerable<PackageManifest> GetModules()
         {
             return ApiTestSelfHost.packageActions.Keys;
         }
 
         public IEnumerable<string> GetFunctionsFromModule(string module)
         {
-            if (ApiTestSelfHost.packageActions.ContainsKey(module))
-                return ApiTestSelfHost.packageActions[module].Keys;
+            foreach (var item in ApiTestSelfHost.packageActions)
+            {
+                if(item.Key.name == module)
+                {
+                    return item.Value.Keys;
+                }
+            }
             return null;
         }
 
@@ -27,12 +33,15 @@ namespace Domo.ApiTest
         {
             try
             {
-                if (ApiTestSelfHost.packageActions.ContainsKey(module))
+                foreach (var item in ApiTestSelfHost.packageActions)
                 {
-                    if (ApiTestSelfHost.packageActions[module].ContainsKey(func))
+                    if (item.Key.name == module)
                     {
-                        ApiTestSelfHost.packageActions[module][func].Invoke();
-                        return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+                        if (item.Value.ContainsKey(func))
+                        {
+                            item.Value[func].Invoke();
+                            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+                        }
                     }
                 }
                 return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
