@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{677D3F71-E45D-493F-98A5-A4E29F5B1274}</ProjectGuid>
+    <ProjectGuid>{57C82C21-ACDD-4A36-A6E4-E8BA97019C0F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domo</RootNamespace>
-    <AssemblyName>Domo</AssemblyName>
+    <RootNamespace>Domo.ApiTest</RootNamespace>
+    <AssemblyName>Domo.ApiTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,59 +30,48 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNoTesting|AnyCPU'">
-    <OutputPath>bin\DebugNoTesting\</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Domo.ConsoleApp\bin\Debug\IronPython.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Modules">
-      <HintPath>..\Domo.ConsoleApp\bin\Debug\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.SQLite">
-      <HintPath>..\Domo.ConsoleApp\bin\Debug\IronPython.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Domo.ConsoleApp\bin\Debug\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="policy.2.7.IronPython">
-      <HintPath>..\Domo.ConsoleApp\bin\Debug\policy.2.7.IronPython.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.SelfHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.SelfHost.5.2.3\lib\net45\System.Web.Http.SelfHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="ApiTestSelfHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domo.ApiTest\Domo.ApiTest.csproj">
-      <Project>{57C82C21-ACDD-4A36-A6E4-E8BA97019C0F}</Project>
-      <Name>Domo.ApiTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.API\Domo.API.csproj">
-      <Project>{DFC5A6EC-E496-4B68-9A0D-8F775676293F}</Project>
-      <Name>Domo.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
-      <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
-      <Name>Domo.Misc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.Modules\Domo.Modules.csproj">
-      <Project>{BBD08AE1-60B6-407C-9205-CA57011D9107}</Project>
-      <Name>Domo.Modules</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Domo.Packaging\Domo.Packaging.csproj">
-      <Project>{DA028327-C86B-4EE8-9955-39FDCF2E05E2}</Project>
+      <Project>{da028327-c86b-4ee8-9955-39fdcf2e05e2}</Project>
       <Name>Domo.Packaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domo.Scripting\Domo.Scripting.csproj">
+      <Project>{2deec589-16a2-4a93-b2af-147aba7f970b}</Project>
+      <Name>Domo.Scripting</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

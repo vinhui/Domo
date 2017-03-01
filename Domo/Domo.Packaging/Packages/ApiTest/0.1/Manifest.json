@@ -1,0 +1,13 @@
+{
+  "name": "ApiTest",
+  "description": "Test Description",
+  "iconPath": null,
+  "permissions": [
+    "*"
+  ],
+  "searchPaths": [
+    "Lib"
+  ],
+  "dependencies":[
+  ]
+}

@@ -189,6 +189,7 @@ namespace Domo.Scripting
             PythonType log = DynamicHelpers.GetPythonTypeFromType(typeof(Log));
             globalScope.SetVariable("log", log);
             globalScope.SetVariable("Log", log);
+            globalScope.SetVariable(nameof(ApiAction), (Func<dynamic, dynamic>)ApiAction);
 
             ScriptScope builtinScope = Python.GetBuiltinModule(e);
             builtinScope.SetVariable("__import__", new ImportModuleDelegate(ImportModule));
@@ -216,14 +217,14 @@ namespace Domo.Scripting
             {
                 foreach (var regex in permissions)
                 {
-                    if(Regex.IsMatch(fullName, WildCardToRegular(regex)))
+                    if (Regex.IsMatch(fullName, WildCardToRegular(regex)))
                     {
                         matches.Add(fullName);
                         break;
                     }
                 }
             }
-            
+
             o = Builtin.ImportWithPermissions(context, moduleName, globals, locals, tuple, level, matches);
             return o;
         }
@@ -235,6 +236,12 @@ namespace Domo.Scripting
 
         public void Unload()
         {
+        }
+
+        public static dynamic ApiAction(dynamic func)
+        {
+            func.ApiActionInvoke = new Action(() => func());
+            return func;
         }
     }
 }

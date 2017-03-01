@@ -63,9 +63,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\Manifest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\Manifest.json" />
     <EmbeddedResource Include="Packages\Test2\0.1\Manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -76,72 +74,44 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoInterface.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoInterface.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoLightsController.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoLightsController.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoLightsForm.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ArduinoLightsForm.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleController.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleController.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleTrigger.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleTrigger.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleTrigger2.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\ConsoleTrigger2.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\Delay.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\Delay.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyInterface.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyInterface.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyController.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyController.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyForm.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifyForm.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifySensor.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\SpotifySensor.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\clamp.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\clamp.py" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\LanSensor.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Packages\ModuleTest\0.1\LanTrigger.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\LanSensor.py" />
+    <EmbeddedResource Include="Packages\ModuleTest\0.1\LanTrigger.py" />
     <EmbeddedResource Include="Packages\Nmap\0.6.1\nmap.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -163,6 +133,16 @@
     <EmbeddedResource Include="Packages\aTest - Copy\0.1\Test2.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Packages\ApiTest\0.1\Manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Packages\ApiTest\0.1\ApiTest.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
