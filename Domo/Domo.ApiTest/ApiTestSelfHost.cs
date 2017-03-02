@@ -25,12 +25,38 @@ namespace Domo.ApiTest
                 {
                     try
                     {
-                        var action = variable.Value.ApiActionInvoke;
-                        if(!packageActions.ContainsKey(package.manifest))
+                        try
                         {
-                            packageActions.Add(package.manifest, new Dictionary<string, Action>());
+                            var classDict = variable.Value.__dict__ as IDictionary<dynamic, dynamic>;
+                            foreach (var item in classDict)
+                            {
+                                try
+                                {
+                                    var action = item.Value.__func__.ApiActionInvoke;
+                                    if (!packageActions.ContainsKey(package.manifest))
+                                    {
+                                        packageActions.Add(package.manifest, new Dictionary<string, Action>());
+                                    }
+                                    packageActions[package.manifest].Add(item.Key, action);
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+                            }
                         }
-                        packageActions[package.manifest].Add(variable.Key, action);
+                        catch
+                        {
+                        }
+                        finally
+                        {
+                            var action = variable.Value.ApiActionInvoke;
+                            if (!packageActions.ContainsKey(package.manifest))
+                            {
+                                packageActions.Add(package.manifest, new Dictionary<string, Action>());
+                            }
+                            packageActions[package.manifest].Add(variable.Key, action);
+                        }
                     }
                     catch
                     {

@@ -9,7 +9,6 @@ class Test3:
     x = 10;
     b = "Hello";
 
-    @testdecorator 
     def Hello(self):
         print("Hello World from test3");
 

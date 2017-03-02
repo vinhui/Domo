@@ -1,4 +1,5 @@
-﻿using Domo.Packaging;
+﻿using Domo.Misc.Debug;
+using Domo.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +47,9 @@ namespace Domo.ApiTest
                 }
                 return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Error(ex);
                 return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
             }
         }

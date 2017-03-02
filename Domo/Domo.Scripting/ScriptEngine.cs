@@ -148,6 +148,14 @@ namespace Domo.Scripting
             {
                 AddFile(path);
             }
+
+            //foreach (var item in scope.GetItems())
+            //{
+            //    foreach (var vk in item.Value.dict as IDictionary<dynamic, dynamic>)
+            //    {
+            //        Log.Debug(vk.Key);
+            //    }
+            //}
         }
 
         public void AddSearchPath(string path)
@@ -238,7 +246,7 @@ namespace Domo.Scripting
         {
         }
 
-        public static dynamic ApiAction(dynamic func)
+        public dynamic ApiAction(dynamic func)
         {
             func.ApiActionInvoke = new Action(() => func());
             return func;

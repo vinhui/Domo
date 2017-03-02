@@ -65,6 +65,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
+      <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
+      <Name>Domo.Misc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domo.Packaging\Domo.Packaging.csproj">
       <Project>{da028327-c86b-4ee8-9955-39fdcf2e05e2}</Project>
       <Name>Domo.Packaging</Name>
