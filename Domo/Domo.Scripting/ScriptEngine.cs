@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using PythonEngine = Microsoft.Scripting.Hosting.ScriptEngine;
@@ -77,7 +78,7 @@ namespace Domo.Scripting
         {
             List<PythonType> types = new List<PythonType>();
 
-            foreach (var item in GetTypes())
+            foreach (PythonType item in GetTypes())
             {
                 if (PythonOps.IsSubClass(item, DynamicHelpers.GetPythonTypeFromType(t)))
                 {
@@ -92,18 +93,18 @@ namespace Domo.Scripting
         {
             List<PythonType> types = new List<PythonType>();
 
-            foreach (var item in scope.GetItems())
+            foreach (KeyValuePair<string, dynamic> item in scope.GetItems())
             {
-                if (item.Value is PythonType)
+                if (!(item.Value is PythonType))
+                    continue;
+
+                PythonType type = item.Value;
+
+                Type t = ClrModule.GetClrType(type);
+
+                if (!t.IsAbstract)
                 {
-                    PythonType type = item.Value;
-
-                    Type t = ClrModule.GetClrType(type);
-
-                    if (!t.IsAbstract)
-                    {
-                        types.Add(type);
-                    }
+                    types.Add(type);
                 }
             }
 
@@ -130,12 +131,12 @@ namespace Domo.Scripting
                 Log.Error("Failed to load {0} at {1}, there was an error with importing a module:", Path.GetFileNameWithoutExtension(path), path);
                 Log.Error(ex.Message);
                 Log.Debug("Search paths for the engine are:");
-                foreach (var item in engine.GetSearchPaths())
+                foreach (string item in engine.GetSearchPaths())
                 {
                     Log.Debug("\t" + item);
                 }
                 Log.Debug("Permissions for the engine are:");
-                foreach (var item in permissions)
+                foreach (string item in permissions)
                 {
                     Log.Debug("\t" + item);
                 }
@@ -162,32 +163,35 @@ namespace Domo.Scripting
         {
             ICollection<string> searchPaths = engine.GetSearchPaths();
             string s = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-            if (!searchPaths.Contains(s))
-            {
-                Log.Debug("Adding search path '{0}' to engine", path);
-                searchPaths.Add(s);
-                engine.SetSearchPaths(searchPaths);
-            }
+            if (searchPaths.Contains(s))
+                return;
+
+            Log.Debug("Adding search path '{0}' to engine", path);
+            searchPaths.Add(s);
+            engine.SetSearchPaths(searchPaths);
         }
 
         private PythonEngine CreatePythonEngine(out ScriptScope globalScope)
         {
             PythonEngine e;
 
-            Dictionary<string, object> options = new Dictionary<string, object>();
+            Dictionary<string, object> options =
+                new Dictionary<string, object>
+                {
+                    ["Debug"] = Config.GetValue<bool>("python", "debug"),
+                    ["Frames"] = Config.GetValue<bool>("python", "frames"),
+                    ["FullFrames"] = Config.GetValue<bool>("python", "fullFrames")
+                };
 
-            options["Debug"] = Config.GetValue<bool>("python", "debug");
-            options["Frames"] = Config.GetValue<bool>("python", "frames");
-            options["FullFrames"] = Config.GetValue<bool>("python", "fullFrames");
 
             Log.Debug("Creating new python engine with the following options:");
-            foreach (var item in options)
+            foreach (KeyValuePair<string, object> item in options)
             {
                 Log.Debug("\t{0}: {1}", item.Key, item.Value);
             }
             e = Python.CreateEngine(options);
 
-            foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly item in AppDomain.CurrentDomain.GetAssemblies())
             {
                 e.Runtime.LoadAssembly(item);
             }
@@ -199,7 +203,7 @@ namespace Domo.Scripting
             globalScope.SetVariable("Log", log);
             globalScope.SetVariable(nameof(ApiAction), (Func<dynamic, dynamic>)ApiAction);
 
-            ScriptScope builtinScope = Python.GetBuiltinModule(e);
+            ScriptScope builtinScope = e.GetBuiltinModule();
             builtinScope.SetVariable("__import__", new ImportModuleDelegate(ImportModule));
 
             return e;
@@ -210,7 +214,7 @@ namespace Domo.Scripting
             object o = null;
             List<string> fullNames = new List<string>();
             if (tuple != null && tuple.Count > 0)
-                foreach (var item in tuple)
+                foreach (object item in tuple)
                 {
                     if (item.ToString() != "*")
                         fullNames.Add(moduleName + "." + item);
@@ -221,15 +225,11 @@ namespace Domo.Scripting
 
             List<string> matches = new List<string>(fullNames.Count);
 
-            foreach (var fullName in fullNames)
+            foreach (string fullName in fullNames)
             {
-                foreach (var regex in permissions)
+                if (permissions.Any(regex => Regex.IsMatch(fullName, WildCardToRegular(regex))))
                 {
-                    if (Regex.IsMatch(fullName, WildCardToRegular(regex)))
-                    {
-                        matches.Add(fullName);
-                        break;
-                    }
+                    matches.Add(fullName);
                 }
             }
 
@@ -237,7 +237,7 @@ namespace Domo.Scripting
             return o;
         }
 
-        private static String WildCardToRegular(String value)
+        private static string WildCardToRegular(string value)
         {
             return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
         }
@@ -248,7 +248,7 @@ namespace Domo.Scripting
 
         public dynamic ApiAction(dynamic func)
         {
-            func.ApiActionInvoke = new Action(() => func());
+            func.ApiActionInvoke = "";
             return func;
         }
     }

@@ -20,7 +20,7 @@ namespace Domo.ApiTest
 
         public IEnumerable<string> GetFunctionsFromModule(string module)
         {
-            foreach (var item in ApiTestSelfHost.packageActions)
+            foreach (KeyValuePair<ModuleFactory.ModuleListItem, Dictionary<string, Action>> item in ApiTestSelfHost.packageActions)
             {
                 if(item.Key.name == module)
                 {
@@ -43,7 +43,6 @@ namespace Domo.ApiTest
                         continue;
 
                     item.Key.package.engine.engine.Operations.InvokeMember(item.Key.instance, func);
-                    //item.Value[func].Invoke();
                     return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
                 }
                 return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
