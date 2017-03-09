@@ -1,4 +1,5 @@
-﻿using Domo.Packaging;
+﻿using Domo.Misc.Debug;
+using Domo.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,71 +7,140 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.Http.SelfHost;
+using IronPython.Runtime.Operations;
+using static Domo.Modules.ModuleFactory;
 
 namespace Domo.ApiTest
 {
     public class ApiTestSelfHost
     {
-        static HttpSelfHostServer server;
-        public static Dictionary<PackageManifest, Dictionary<string, Action>> packageActions = new Dictionary<PackageManifest, Dictionary<string, Action>>();
+        private static HttpSelfHostServer server;
 
-        public ApiTestSelfHost(List<Package> packages)
+        public static Dictionary<ModuleListItem, Dictionary<string, Action>> packageActions =
+            new Dictionary<ModuleListItem, Dictionary<string, Action>>();
+
+        public ApiTestSelfHost(IEnumerable<ModuleListItem> modules)
         {
-            var config = new HttpSelfHostConfiguration("http://localhost:80");
+            HttpSelfHostConfiguration config = new HttpSelfHostConfiguration("http://localhost:80");
 
-            foreach (var package in packages)
+            foreach (ModuleListItem module in modules)
             {
-                var variables = package.engine.GetVariables();
-                foreach (var variable in variables)
+                try
                 {
-                    try
+                    dynamic c = null;
+                    PythonOps.TryGetBoundAttr(module.instance, "__class__", out c);
+                    //                    IDictionary<dynamic, dynamic> classDict = module.dynamicInstance.__dict__ as IDictionary<dynamic, dynamic>;
+                    IDictionary<dynamic, dynamic> classDict = c.__dict__ as IDictionary<dynamic, dynamic>;
+                    if (classDict == null)
+                        continue;
+
+                    foreach (KeyValuePair<dynamic, dynamic> item in classDict)
                     {
                         try
                         {
-                            var classDict = variable.Value.__dict__ as IDictionary<dynamic, dynamic>;
-                            foreach (var item in classDict)
+                            IDictionary<dynamic, dynamic> keyValuePairs =
+                                item.Value.__dict__ as IDictionary<dynamic, dynamic>;
+                            if (keyValuePairs == null)
+                                continue;
+
+                            foreach (KeyValuePair<dynamic, dynamic> variable in
+                                keyValuePairs)
                             {
-                                try
-                                {
-                                    var action = item.Value.__func__.ApiActionInvoke;
-                                    if (!packageActions.ContainsKey(package.manifest))
-                                    {
-                                        packageActions.Add(package.manifest, new Dictionary<string, Action>());
-                                    }
-                                    packageActions[package.manifest].Add(item.Key, action);
-                                }
-                                catch
-                                {
+                                if (variable.Key != "ApiActionInvoke")
                                     continue;
+
+                                if (!packageActions.ContainsKey(module))
+                                {
+                                    packageActions.Add(module, new Dictionary<string, Action>());
                                 }
+                                packageActions[module].Add(item.Key, variable.Value);
                             }
+                            //                            dynamic action = item.Value.__func__.ApiActionInvoke;
+                            //                            if (!packageActions.ContainsKey(module.package.manifest))
+                            //                            {
+                            //                                packageActions.Add(module.package.manifest, new Dictionary<string, Action>());
+                            //                            }
+                            //                            packageActions[module.package.manifest].Add(item.Key, action);
                         }
                         catch
                         {
+                            continue;
                         }
-                        finally
-                        {
-                            var action = variable.Value.ApiActionInvoke;
-                            if (!packageActions.ContainsKey(package.manifest))
-                            {
-                                packageActions.Add(package.manifest, new Dictionary<string, Action>());
-                            }
-                            packageActions[package.manifest].Add(variable.Key, action);
-                        }
-                    }
-                    catch
-                    {
-                        continue;
                     }
                 }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+                //finally
+                //{
+                //    var action = variable.Value.ApiActionInvoke;
+                //    if (!packageActions.ContainsKey(package.manifest))
+                //    {
+                //        packageActions.Add(package.manifest, new Dictionary<string, Action>());
+                //    }
+                //    packageActions[package.manifest].Add(variable.Key, action);
+                //}
             }
+
+            //foreach (var package in packages)
+            //{
+            //    var variables = package.engine.GetVariables();
+            //    foreach (var variable in variables)
+            //    {
+            //        try
+            //        {
+            //            try
+            //            {
+            //                var classDict = variable.Value.__dict__ as IDictionary<dynamic, dynamic>;
+            //                foreach (var item in classDict)
+            //                {
+            //                    try
+            //                    {
+            //                        var action = item.Value.__func__.ApiActionInvoke;
+            //                        if (!packageActions.ContainsKey(package.manifest))
+            //                        {
+            //                            packageActions.Add(package.manifest, new Dictionary<string, Action>());
+            //                        }
+            //                        packageActions[package.manifest].Add(item.Key, action);
+            //                    }
+            //                    catch
+            //                    {
+            //                        continue;
+            //                    }
+            //                }
+            //            }
+            //            catch
+            //            {
+            //            }
+            //            finally
+            //            {
+            //                var action = variable.Value.ApiActionInvoke;
+            //                if (!packageActions.ContainsKey(package.manifest))
+            //                {
+            //                    packageActions.Add(package.manifest, new Dictionary<string, Action>());
+            //                }
+            //                packageActions[package.manifest].Add(variable.Key, action);
+            //            }
+            //        }
+            //        catch
+            //        {
+            //            continue;
+            //        }
+            //    }
+            //}
 
             config.Formatters.Clear();
             config.Formatters.Add(new System.Net.Http.Formatting.JsonMediaTypeFormatter());
 
             config.Routes.MapHttpRoute(
-                "InvokeFunc", "api/modules/{module}/{func}",
-                defaults: new { controller = "Test", func = RouteParameter.Optional, module = RouteParameter.Optional });
+                                       "InvokeFunc", "api/modules/{module}/{func}",
+                                       defaults: new
+                                                 {
+                                                     controller = "Test",
+                                                     func = RouteParameter.Optional,
+                                                     module = RouteParameter.Optional
+                                                 });
 
             server = new HttpSelfHostServer(config);
             server.OpenAsync().Wait();
@@ -78,8 +148,7 @@ namespace Domo.ApiTest
 
         public static void Unload()
         {
-            if (server != null)
-                server.Dispose();
+            server?.Dispose();
         }
     }
 }

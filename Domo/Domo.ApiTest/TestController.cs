@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Domo.Modules;
 
 namespace Domo.ApiTest
 {
@@ -14,7 +15,7 @@ namespace Domo.ApiTest
     {
         public IEnumerable<PackageManifest> GetModules()
         {
-            return ApiTestSelfHost.packageActions.Keys;
+            return ApiTestSelfHost.packageActions.Select(x=>x.Key.package.manifest);
         }
 
         public IEnumerable<string> GetFunctionsFromModule(string module)
@@ -34,16 +35,16 @@ namespace Domo.ApiTest
         {
             try
             {
-                foreach (var item in ApiTestSelfHost.packageActions)
+                foreach (KeyValuePair<ModuleFactory.ModuleListItem, Dictionary<string, Action>> item in ApiTestSelfHost.packageActions)
                 {
-                    if (item.Key.name == module)
-                    {
-                        if (item.Value.ContainsKey(func))
-                        {
-                            item.Value[func].Invoke();
-                            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
-                        }
-                    }
+                    if (item.Key.package.manifest.name != module)
+                        continue;
+                    if (!item.Value.ContainsKey(func))
+                        continue;
+
+                    item.Key.package.engine.engine.Operations.InvokeMember(item.Key.instance, func);
+                    //item.Value[func].Invoke();
+                    return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
                 }
                 return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
             }

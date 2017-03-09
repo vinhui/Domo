@@ -31,6 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=cde11cd8ecc94417">
+      <HintPath>..\..\IronPython\bin\Debug\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=cde11cd8ecc94417">
+      <HintPath>..\..\IronPython\bin\Debug\Microsoft.Scripting.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -68,6 +74,10 @@
     <ProjectReference Include="..\Domo.Misc\Domo.Misc.csproj">
       <Project>{4AA27AFE-8E27-45D6-8186-07C36A08C851}</Project>
       <Name>Domo.Misc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domo.Modules\Domo.Modules.csproj">
+      <Project>{BBD08AE1-60B6-407C-9205-CA57011D9107}</Project>
+      <Name>Domo.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domo.Packaging\Domo.Packaging.csproj">
       <Project>{da028327-c86b-4ee8-9955-39fdcf2e05e2}</Project>

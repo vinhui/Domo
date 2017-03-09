@@ -12,7 +12,7 @@ namespace Domo.Modules
     /// </summary>
     public class ModuleFactory : IDisposable
     {
-        private List<ModuleListItem> modules = new List<ModuleListItem>();
+        public List<ModuleListItem> modules = new List<ModuleListItem>();
 
         /// <summary>
         /// Load all the modules from a script scope
@@ -23,23 +23,24 @@ namespace Domo.Modules
         {
             foreach (var package in packages)
             {
-                IEnumerable<PythonType> types = SortTypes(package.engine.GetTypes<ModuleBase>(), package.manifest.executionPriority);
+                IEnumerable<PythonType> types = SortTypes(package.engine.GetTypes<ModuleBase>(),
+                                                          package.manifest.executionPriority);
 
                 foreach (var type in types)
                 {
                     Log.Debug("Found module '{0}'", PythonType.Get__name__(type));
                     modules.Add(new ModuleListItem(
-                        package,
-                        type,
-                        package.engine.engine.Operations.CreateInstance(type) as ModuleBase
-                        ));
+                                                   package,
+                                                   type,
+                                                   package.engine.engine.Operations.CreateInstance(type) as ModuleBase
+                                                  ));
                 }
             }
 
             Log.Info("Found a total of {0} modules", modules.Count);
 
             // All the references should be assigned before going into the OnEnable
-            foreach (var item in modules)
+            foreach (ModuleListItem item in modules)
             {
                 Log.Debug("Calling OnEnable on '{0}'", item.name);
                 item.instance.OnEnable();
@@ -54,22 +55,22 @@ namespace Domo.Modules
                 return types;
 
             List<PythonType> typeList = new List<PythonType>(types);
-            List<string> typeNames = typeList.Select(x => PythonType.Get__name__(x)).ToList();
+            List<string> typeNames = typeList.Select(PythonType.Get__name__).ToList();
 
             for (int i = order.Length - 1; i >= 0; i--)
             {
                 for (int n = 0; n < typeNames.Count; n++)
                 {
-                    if (order[i] == typeNames[n])
-                    {
-                        PythonType t = typeList[n];
-                        string name = typeNames[n];
-                        typeList.RemoveAt(n);
-                        typeNames.RemoveAt(n);
-                        typeList.Insert(0, t);
-                        typeNames.Insert(0, name);
-                        break;
-                    }
+                    if (order[i] != typeNames[n])
+                        continue;
+
+                    PythonType t = typeList[n];
+                    string name = typeNames[n];
+                    typeList.RemoveAt(n);
+                    typeNames.RemoveAt(n);
+                    typeList.Insert(0, t);
+                    typeNames.Insert(0, name);
+                    break;
                 }
             }
 
@@ -97,13 +98,17 @@ namespace Domo.Modules
             if (!t.IsSubclassOf(typeof(ModuleBase)))
             {
                 if (throwException)
-                    throw new TypeLoadException(string.Format("The type of module you're trying to get an instance ({0}) of does not derive of '{1}'", t.FullName, typeof(ModuleBase).FullName));
+                    throw new TypeLoadException(
+                                                $"The type of module you're trying to get an instance ({t.FullName}) of does not derive of '{typeof(ModuleBase).FullName}'");
+
                 return false;
             }
             else if (t.IsAbstract)
             {
                 if (throwException)
-                    throw new TypeLoadException(string.Format("The module of type '{0}' that you're trying to get an instance of is abstract", t.FullName));
+                    throw new TypeLoadException(
+                                                $"The module of type '{t.FullName}' that you're trying to get an instance of is abstract");
+
                 return false;
             }
 
@@ -122,12 +127,17 @@ namespace Domo.Modules
                 Log.Debug("Calling OnDisable on '{0}'", item.name);
                 item.instance.OnDisable();
             }
+
             modules.Clear();
         }
 
-        private class ModuleListItem
+        public class ModuleListItem
         {
-            public string name { get { return PythonType.Get__name__(type); } }
+            public string name
+            {
+                get { return PythonType.Get__name__(type); }
+            }
+
             public readonly Package package;
             public readonly PythonType type;
             public readonly ModuleBase instance;

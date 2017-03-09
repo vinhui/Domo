@@ -21,7 +21,7 @@ namespace Domo
 
             ModuleManager.Init();
             ModuleManager.LoadAllModules(pm.packages);
-            ApiTestSelfHost api = new ApiTestSelfHost(pm.packages);
+            ApiTestSelfHost api = new ApiTestSelfHost(ModuleManager.factory.modules);
         }
 
         public static void ShutDown()

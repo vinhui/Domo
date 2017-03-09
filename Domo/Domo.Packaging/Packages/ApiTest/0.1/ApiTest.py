@@ -1,10 +1,10 @@
+from Domo.Modules import *
 
 @ApiAction
 def Play():
     Log.Info("Play");
 
-class Test:
-    @staticmethod
+class Test(TriggerModule):
     @ApiAction
-    def Temp():
-        pass;
+    def Temp(self):
+        Log.Info("Temp");

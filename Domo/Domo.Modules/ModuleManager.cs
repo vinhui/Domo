@@ -11,7 +11,7 @@ namespace Domo.Modules
     /// </summary>
     public static class ModuleManager
     {
-        private static ModuleFactory factory;
+        public static ModuleFactory factory;
 
         /// <summary>
         /// Initialize the manager
