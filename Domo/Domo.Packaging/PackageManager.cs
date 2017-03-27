@@ -94,10 +94,11 @@ namespace Domo.Packaging
 
         public Package LoadPackage(List<Tuple<string, Version, PackageManifest>> availablePackages, string path, Version version, PackageManifest manifest)
         {
-            if (packages.FirstOrDefault(x => x.path == path) != null)
+            Package alreadyLoadedPackage = packages.FirstOrDefault(x => x.path == path);
+            if (alreadyLoadedPackage != null)
             {
                 Log.Debug("Package {0}, version {1} is already loaded, no need to load it again", manifest.name, version);
-                return null;
+                return alreadyLoadedPackage;
             }
 
             Log.Info("Loading package {0}, version {1}", manifest.name, version);
