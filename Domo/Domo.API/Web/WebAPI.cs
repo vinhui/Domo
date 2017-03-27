@@ -5,20 +5,41 @@ using System;
 using System.Collections;
 using System.Linq;
 
+#if __MonoCS__
+using System.Runtime.InteropServices;
+#endif
+
 namespace Domo.API.Web
 {
     public class WebAPI : ApiBase
     {
         private const string defaultHostname = "http://localhost:80/api/";
         private NancyHost host;
+#if __MonoCS__
+        [DllImport ("libc")]
+        public static extern uint getuid ();
+#endif
 
         public override void Init()
         {
             Log.Debug("Starting web api");
 
+#if __MonoCS__
+            if (getuid() == 0)
+            {
+                Log.Info("Running as root, everything is fine");
+            }
+            else
+            {
+                Log.Error("You need to run as root to start the web api!");
+                return;
+            }
+#endif
+
             HostConfiguration hostConfig = new HostConfiguration()
             {
                 UnhandledExceptionCallback = ExceptionHandler,
+                RewriteLocalhost = true,
                 UrlReservations = new UrlReservations()
                 {
                     CreateAutomatically = true
