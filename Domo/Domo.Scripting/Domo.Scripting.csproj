@@ -35,19 +35,19 @@
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IronPython\bin\Debug\IronPython.dll</HintPath>
+      <HintPath>..\Domo.ConsoleApp\bin\Debug\IronPython.dll</HintPath>
     </Reference>
     <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IronPython\bin\Debug\IronPython.Modules.dll</HintPath>
+      <HintPath>..\Domo.ConsoleApp\bin\Debug\IronPython.Modules.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IronPython\bin\Debug\Microsoft.Dynamic.dll</HintPath>
+      <HintPath>..\Domo.ConsoleApp\bin\Debug\Microsoft.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=cde11cd8ecc94417, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IronPython\bin\Debug\Microsoft.Scripting.dll</HintPath>
+      <HintPath>..\Domo.ConsoleApp\bin\Debug\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
