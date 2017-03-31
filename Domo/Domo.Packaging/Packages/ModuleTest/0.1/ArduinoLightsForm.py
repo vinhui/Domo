@@ -1,6 +1,10 @@
 ﻿from Domo.Modules import *
 from Domo.API import ApiManager, ApiResponse, ApiCodes
 
+import clr
+clr.AddReference("System.Drawing")
+clr.AddReference("System.Windows.Forms")
+
 from System.Collections.Generic import Dictionary
 from System.Drawing import Point, Color, Size, Brush, SolidBrush 
 from System.Threading import Thread, ThreadStart
