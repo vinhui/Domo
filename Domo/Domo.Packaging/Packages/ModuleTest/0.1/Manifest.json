@@ -6,7 +6,8 @@
     "*"
   ],
   "searchPaths":[
-    "Lib"
+    "Lib",
+    "DLLs"
   ],
   "dependencies": [
     "Nmap"
