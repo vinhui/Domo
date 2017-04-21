@@ -1,9 +1,9 @@
 ﻿using Domo.Misc;
 using Domo.Misc.Debug;
-using Nancy.Hosting.Self;
 using System;
 using System.Collections;
-using System.Linq;
+using System.Net;
+using Microsoft.Owin.Hosting;
 
 #if __MonoCS__
 using System.Runtime.InteropServices;
@@ -11,18 +11,20 @@ using System.Runtime.InteropServices;
 
 namespace Domo.API.Web
 {
-    public class WebAPI : ApiBase
-    {
-        private const string defaultHostname = "http://localhost:80/api/";
-        private NancyHost host;
+	public class WebAPI : ApiBase
+	{
+		private const string defaultHostname = "http://+:80/api/";
+
 #if __MonoCS__
         [DllImport ("libc")]
         public static extern uint getuid ();
 #endif
 
-        public override void Init()
-        {
-            Log.Debug("Starting web api");
+		private IDisposable[] webApps;
+
+		public override void Init()
+		{
+			Log.Debug("Starting web api");
 
 #if __MonoCS__
             if (getuid() == 0)
@@ -36,51 +38,50 @@ namespace Domo.API.Web
             }
 #endif
 
-            HostConfiguration hostConfig = new HostConfiguration()
-            {
-                UnhandledExceptionCallback = ExceptionHandler,
-                RewriteLocalhost = true,
-                UrlReservations = new UrlReservations()
-                {
-                    CreateAutomatically = true
-                }
-            };
+			string[] hostnames = Config.GetValue<ArrayList>("API", "web", "bindurls").ToArray(typeof(string)) as string[];
 
-            string[] hostnames = Config.GetValue<ArrayList>("API", "web", "bindurls").ToArray(typeof(string)) as string[];
-            Uri[] uris;
-            if (hostnames != null && hostnames.Length > 0)
-            {
-                uris = hostnames.Select(x => new Uri(x)).ToArray();
-                Log.Debug("Binding web api to the following urls: {0}", string.Join(", ", hostnames));
-            }
-            else
-            {
-                Log.Warning("No 'API.web.bindurls' found in the config, using the default: {0}", defaultHostname);
-                uris = new Uri[]
-                {
-                    new Uri(defaultHostname)
-                };
-            }
+			if (hostnames == null || hostnames.Length == 0)
+			{
+				Log.Warning("No 'API.web.bindurls' found in the config, using the default: {0}", defaultHostname);
+				hostnames = new[]
+				{
+					defaultHostname
+				};
+			}
 
-            host = new NancyHost(hostConfig, uris);
-            host.Start();
-            Log.Info("Web api has started");
-        }
+			Log.Debug("Binding web api to the following urls: {0}", string.Join(", ", hostnames));
+			webApps = new IDisposable[hostnames.Length];
 
-        public override void OnShutdown()
-        {
-            Log.Info("Shutting down web api");
+			for (int i = 0; i < hostnames.Length; i++)
+			{
+				try
+				{
+					webApps[i] = WebApp.Start<AspApiConfiguration>(hostnames[i]);
+				}
+				catch (HttpListenerException ex)
+				{
+					Log.Error("Failed to bind api listener to '{0}'", hostnames[i]);
+					Log.Exception(ex);
+				}
+			}
 
-            if (host != null)
-                host.Stop();
-            else
-                Log.Warning("Can't shut down web api, it isn't initialized");
-        }
+			Log.Info("Web api has started");
+		}
 
-        private void ExceptionHandler(Exception ex)
-        {
-            Log.Error("Received exception from web api:");
-            Log.Exception(ex);
-        }
-    }
+		public override void OnShutdown()
+		{
+			Log.Info("Shutting down web api");
+
+			foreach (IDisposable webApp in webApps)
+			{
+				webApp?.Dispose();
+			}
+		}
+
+		private void ExceptionHandler(Exception ex)
+		{
+			Log.Error("Received exception from web api:");
+			Log.Exception(ex);
+		}
+	}
 }
