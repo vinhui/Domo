@@ -16,8 +16,8 @@ namespace Domo.ApiTest
     {
         private static HttpSelfHostServer server;
 
-        public static Dictionary<ModuleListItem, Dictionary<string, Action>> packageActions =
-            new Dictionary<ModuleListItem, Dictionary<string, Action>>();
+        public static Dictionary<ModuleListItem, List<string>> packageActions =
+            new Dictionary<ModuleListItem, List<string>>();
 
         public ApiTestSelfHost(IEnumerable<ModuleListItem> modules)
         {
@@ -51,9 +51,9 @@ namespace Domo.ApiTest
 
                                 if (!packageActions.ContainsKey(module))
                                 {
-                                    packageActions.Add(module, new Dictionary<string, Action>());
+                                    packageActions.Add(module, new List<string>());
                                 }
-                                packageActions[module].Add(item.Key, variable.Value);
+                                packageActions[module].Add(item.Key);
                             }
                             //                            dynamic action = item.Value.__func__.ApiActionInvoke;
                             //                            if (!packageActions.ContainsKey(module.package.manifest))

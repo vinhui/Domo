@@ -8,3 +8,4 @@ class Test(TriggerModule):
     @ApiAction
     def Temp(self):
         Log.Info("Temp");
+        return "test";

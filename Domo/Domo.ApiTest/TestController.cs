@@ -3,7 +3,10 @@ using Domo.Packaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,37 +23,40 @@ namespace Domo.ApiTest
 
         public IEnumerable<string> GetFunctionsFromModule(string module)
         {
-            foreach (KeyValuePair<ModuleFactory.ModuleListItem, Dictionary<string, Action>> item in ApiTestSelfHost.packageActions)
+            foreach (KeyValuePair<ModuleFactory.ModuleListItem, List<string>> item in ApiTestSelfHost.packageActions)
             {
-                if(item.Key.name == module)
+                if(item.Key.package.manifest.name == module)
                 {
-                    return item.Value.Keys;
+                    return item.Value;
                 }
             }
             return null;
         }
 
         [HttpPost]
-        public HttpResponseMessage InvokeFuncFromModule(string module, string func)
+        public dynamic InvokeFuncFromModule(string module, string func, [FromBody]params object[] parameters)
         {
+            
             try
             {
-                foreach (KeyValuePair<ModuleFactory.ModuleListItem, Dictionary<string, Action>> item in ApiTestSelfHost.packageActions)
+                foreach (KeyValuePair<ModuleFactory.ModuleListItem, List<string>> item in ApiTestSelfHost.packageActions)
                 {
                     if (item.Key.package.manifest.name != module)
                         continue;
-                    if (!item.Value.ContainsKey(func))
+                    if (!item.Value.Contains(func))
                         continue;
 
-                    item.Key.package.engine.engine.Operations.InvokeMember(item.Key.instance, func);
-                    return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+                    dynamic returnVal = item.Key.package.engine.engine.Operations.InvokeMember(item.Key.instance, func, parameters ?? new object[0]);
+                    var response = new HttpResponseMessage(HttpStatusCode.Accepted);
+                    response.Content = new ObjectContent(returnVal.GetType(), returnVal, new JsonMediaTypeFormatter());
+                    return returnVal; 
                 }
-                return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
+                throw new HttpResponseException(System.Net.HttpStatusCode.NotFound);
             }
             catch(Exception ex)
             {
                 Log.Error(ex);
-                return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
+                throw new HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
             }
         }
     }
