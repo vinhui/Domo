@@ -9,6 +9,7 @@ using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -201,7 +202,8 @@ namespace Domo.Scripting
             PythonType log = DynamicHelpers.GetPythonTypeFromType(typeof(Log));
             globalScope.SetVariable("log", log);
             globalScope.SetVariable("Log", log);
-            globalScope.SetVariable(nameof(ApiAction), (Func<dynamic, dynamic>)ApiAction);
+            globalScope.SetVariable(nameof(ExposeFunction), (Func<dynamic, dynamic>)ExposeFunction);
+            globalScope.SetVariable(nameof(ExposeProperty), (Func<string, dynamic>)ExposeProperty);
 
             ScriptScope builtinScope = e.GetBuiltinModule();
             builtinScope.SetVariable("__import__", new ImportModuleDelegate(ImportModule));
@@ -246,10 +248,20 @@ namespace Domo.Scripting
         {
         }
 
-        public dynamic ApiAction(dynamic func)
+        public dynamic ExposeFunction(dynamic func)
         {
-            func.ApiActionInvoke = "";
+            func.ExposeFunction = "";
             return func;
+        }
+
+        public dynamic ExposeProperty(string variableName)
+        {
+            var realDecorator = new Func<dynamic, dynamic>(func =>
+                                                            {
+                                                                func.VariableName = variableName;
+                                                                return func;
+                                                            });
+            return realDecorator;
         }
     }
 }
