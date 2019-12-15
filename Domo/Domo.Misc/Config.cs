@@ -155,10 +155,15 @@ namespace Domo.Misc
         /// <exception cref="KeyNotFoundException">Gets thrown when the requested key chain does not exist</exception>
         public static T GetValue<T>(params string[] keys)
         {
-            return GetValue<T>(data, 0, keys);
+            return GetValue(data, 0, default(T), keys);
         }
 
-        private static T GetValue<T>(Dictionary<string, object> dict, int currIndex, params string[] keys)
+        public static T GetValue<T>(T defaultVal, params string[] keys)
+        {
+            return GetValue(data, 0, defaultVal, keys);
+        }
+
+        private static T GetValue<T>(Dictionary<string, object> dict, int currIndex, T defaultVal, params string[] keys)
         {
             if (currIndex == keys.Length - 1)
                 return GetValue<T>(dict, keys[currIndex]);
@@ -171,6 +176,7 @@ namespace Domo.Misc
                         return GetValue<T>(
                             (Dictionary<string, object>)dict[keys[currIndex]],
                             ++currIndex,
+                            defaultVal,
                             keys);
                     }
                     else
@@ -180,7 +186,10 @@ namespace Domo.Misc
                 }
                 else
                 {
-                    throw new KeyNotFoundException(string.Format("There is no key chain '{0}' in the config", string.Join(".", keys)));
+                    if (!defaultVal.Equals(default(T)))
+                        return defaultVal;
+                    else
+                        throw new KeyNotFoundException(string.Format("There is no key chain '{0}' in the config", string.Join(".", keys)));
                 }
             }
         }

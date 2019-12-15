@@ -66,6 +66,9 @@
     <EmbeddedResource Include="Packages\ModuleTest\0.1\Manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Packages\Spotify\0.1\Manifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Packages\Test2\0.1\Manifest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -163,6 +166,9 @@
     <EmbeddedResource Include="Packages\aTest - Copy\0.1\Test2.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Packages\Spotify\0.1\SpotifyInterface.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

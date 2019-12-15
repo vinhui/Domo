@@ -1,0 +1,15 @@
+{
+    "name": "Spotify",
+    "description": "Get full spotify control with this package",
+    "iconPath": null,
+    "permissions": [
+        "*"
+    ],
+    "searchPaths": [
+        "Lib"
+    ],
+    "dependencies": [],
+    "executionPriority": [
+        ""
+    ]
+}
