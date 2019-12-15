@@ -38,7 +38,7 @@ namespace Domo.Misc
                             {
                                 "bindurls",
                                 new ArrayList {
-                                    "http://localhost:80/",
+                                    "http://+:80/",
                                 }
                             },
                         }

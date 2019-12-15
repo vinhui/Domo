@@ -16,7 +16,7 @@ namespace Domo.API
         /// <summary>
         /// Arguments from the request
         /// </summary>
-        public IDictionary<string, object> arguments = new Dictionary<string, object>();
+        public IDictionary<string, string> arguments = new Dictionary<string, string>();
 
         /// <summary>
         /// Get an argument
